@@ -1,0 +1,56 @@
+﻿@model MovieNight.Models.Review
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Review</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CriticName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CriticName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReviewDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReviewDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MovieTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MovieTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReviewContent)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReviewContent)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
