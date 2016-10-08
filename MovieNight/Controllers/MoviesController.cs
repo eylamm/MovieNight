@@ -123,5 +123,27 @@ namespace MovieNight.Controllers
             }
             base.Dispose(disposing);
         }
+
+        // GET: Movies/Search/
+        public ActionResult Search(int? id)
+        {
+            // If a movie with the specified id is not found
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // The movie object that is returnt from the Movies DB
+            Movie movie = db.Movies.Find(id);
+
+            // If the object is null
+            if (movie == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Else, return the movie object's data to the movie/search view
+            return View(movie);
+        }
     }
 }

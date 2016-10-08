@@ -1,14 +1,22 @@
 ﻿@model IEnumerable<MovieNight.Models.Movie>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Movies";
 }
 
-<h2>Index</h2>
+<h2>Movies</h2>
 
+@{
+    var movieID = "";
+    if (IsPost)
+    {
+        movieID = Request["searchField"];
+    }
+}
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<input form="searchField" name="searchField"> @Html.ActionLink("Find a movie", "Search", new { id = movieID })
 <table class="table">
     <tr>
         <th>

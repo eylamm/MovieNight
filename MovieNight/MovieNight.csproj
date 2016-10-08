@@ -288,6 +288,7 @@
     <Content Include="Views\Directors\Details.cshtml" />
     <Content Include="Views\Directors\Edit.cshtml" />
     <Content Include="Views\Directors\Index.cshtml" />
+    <Content Include="Views\Movies\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
