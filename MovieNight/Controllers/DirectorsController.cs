@@ -12,7 +12,7 @@ namespace MovieNight.Controllers
 {
     public class DirectorsController : Controller
     {
-        private DirectorDBContext db = new DirectorDBContext();
+        private MovieNightDB db = new MovieNightDB();
 
         // GET: Directors
         public ActionResult Index()
@@ -46,7 +46,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,FirstName,LastName,DateOfBirth,Origin")] Director director)
+        public ActionResult Create([Bind(Include = "ID,FirstName,LastName,Gender,DateOfBirth,Origin,Picture")] Director director)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,FirstName,LastName,DateOfBirth,Origin")] Director director)
+        public ActionResult Edit([Bind(Include = "ID,FirstName,LastName,Gender,DateOfBirth,Origin,Picture")] Director director)
         {
             if (ModelState.IsValid)
             {

@@ -1,21 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
-using System.Data.Entity;
 
 namespace MovieNight.Models
 {
     public class Director
     {
+        [Key, Display(Name = "Director ID")]
         public int ID { get; set; }
+
+        [Required, Display(Name = "First Name")]
         public string FirstName { get; set; }
+
+        [Required, Display(Name = "Last Name")]
         public string LastName { get; set; }
+
+        [Required, Display(Name = "Gender")]
+        public Gender Gender { get; set; }
+
+        [Required,
+         Display(Name = "Birthday"),
+         DataType(DataType.Date),
+         Column(TypeName = "Date"),
+         DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateOfBirth { get; set; }
+
+        [Required, Display(Name = "Origin")]
         public string Origin { get; set; }
+
+        public string Picture { get; set; }
+
+        public virtual ICollection<Movie> Movies { get; set; }
     }
-    public class DirectorDBContext : DbContext
+
+    public enum Gender
     {
-        public DbSet<Director> Directors { get; set; }
+        Male,
+        Female
     }
 }

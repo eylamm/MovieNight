@@ -12,12 +12,13 @@ namespace MovieNight.Controllers
 {
     public class MoviesController : Controller
     {
-        private MovieDBContext db = new MovieDBContext();
+        private MovieNightDB db = new MovieNightDB();
 
         // GET: Movies
         public ActionResult Index()
         {
-            return View(db.Movies.ToList());
+            var movies = db.Movies.Include(m => m.Director);
+            return View(movies.ToList());
         }
 
         // GET: Movies/Details/5
@@ -38,6 +39,7 @@ namespace MovieNight.Controllers
         // GET: Movies/Create
         public ActionResult Create()
         {
+            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "FirstName");
             return View();
         }
 
@@ -46,7 +48,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Title,ReleaseDate,Genre,Plot,Trailer")] Movie movie)
+        public ActionResult Create([Bind(Include = "ID,Title,ReleaseDate,Genre,Plot,DirectorID,Rating,Poster,Trailer")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -55,6 +57,7 @@ namespace MovieNight.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "FirstName", movie.DirectorID);
             return View(movie);
         }
 
@@ -70,6 +73,7 @@ namespace MovieNight.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "FirstName", movie.DirectorID);
             return View(movie);
         }
 
@@ -78,7 +82,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,ReleaseDate,Genre,Plot,Trailer")] Movie movie)
+        public ActionResult Edit([Bind(Include = "ID,Title,ReleaseDate,Genre,Plot,DirectorID,Rating,Poster,Trailer")] Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -86,6 +90,7 @@ namespace MovieNight.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "FirstName", movie.DirectorID);
             return View(movie);
         }
 
@@ -122,28 +127,6 @@ namespace MovieNight.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        // GET: Movies/Search/
-        public ActionResult Search(int? id)
-        {
-            // If a movie with the specified id is not found
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            // The movie object that is returnt from the Movies DB
-            Movie movie = db.Movies.Find(id);
-
-            // If the object is null
-            if (movie == null)
-            {
-                return HttpNotFound();
-            }
-
-            // Else, return the movie object's data to the movie/search view
-            return View(movie);
         }
     }
 }

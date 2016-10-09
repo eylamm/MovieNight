@@ -1,24 +1,20 @@
 ﻿@model IEnumerable<MovieNight.Models.Movie>
 
 @{
-    ViewBag.Title = "Movies";
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Movies</h2>
+<h2>Index</h2>
 
-@{
-    var movieID = "";
-    if (IsPost)
-    {
-        movieID = Request["searchField"];
-    }
-}
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<input form="searchField" name="searchField"> @Html.ActionLink("Find a movie", "Search", new { id = movieID })
 <table class="table">
     <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Director.FirstName)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Title)
         </th>
@@ -32,6 +28,12 @@
             @Html.DisplayNameFor(model => model.Plot)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.Rating)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Poster)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Trailer)
         </th>
         <th></th>
@@ -39,6 +41,9 @@
 
 @foreach (var item in Model) {
     <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Director.FirstName)
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.Title)
         </td>
@@ -50,6 +55,12 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Plot)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Rating)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Poster)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Trailer)

@@ -12,12 +12,13 @@ namespace MovieNight.Controllers
 {
     public class ReviewsController : Controller
     {
-        private ReviewDBContext db = new ReviewDBContext();
+        private MovieNightDB db = new MovieNightDB();
 
         // GET: Reviews
         public ActionResult Index()
         {
-            return View(db.Reviews.ToList());
+            var reviews = db.Reviews.Include(r => r.Movie);
+            return View(reviews.ToList());
         }
 
         // GET: Reviews/Details/5
@@ -38,6 +39,7 @@ namespace MovieNight.Controllers
         // GET: Reviews/Create
         public ActionResult Create()
         {
+            ViewBag.MovieID = new SelectList(db.Movies, "ID", "Title");
             return View();
         }
 
@@ -46,7 +48,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,CriticName,ReviewDate,MovieTitle,ReviewContent")] Review review)
+        public ActionResult Create([Bind(Include = "ID,CriticName,Date,MovieID,Content")] Review review)
         {
             if (ModelState.IsValid)
             {
@@ -55,6 +57,7 @@ namespace MovieNight.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.MovieID = new SelectList(db.Movies, "ID", "Title", review.MovieID);
             return View(review);
         }
 
@@ -70,6 +73,7 @@ namespace MovieNight.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.MovieID = new SelectList(db.Movies, "ID", "Title", review.MovieID);
             return View(review);
         }
 
@@ -78,7 +82,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,CriticName,ReviewDate,MovieTitle,ReviewContent")] Review review)
+        public ActionResult Edit([Bind(Include = "ID,CriticName,Date,MovieID,Content")] Review review)
         {
             if (ModelState.IsValid)
             {
@@ -86,6 +90,7 @@ namespace MovieNight.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.MovieID = new SelectList(db.Movies, "ID", "Title", review.MovieID);
             return View(review);
         }
 
