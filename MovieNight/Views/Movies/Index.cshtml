@@ -9,6 +9,21 @@
 
 <p>
     @Html.ActionLink("Create New", "Create")
+    
+    <!-- Set a new html form, wich will be submmited using get method, so that the search parameters are visible in the url -->
+    @using (Html.BeginForm("Index", "Movies", FormMethod.Get))
+    {
+    <p>
+        <!-- Search a movie based on it's title-->
+        Title: @Html.TextBox("SearchString") <br/>
+
+        <!-- Search a movie based on it's genre, dropdown list populated with the html helper - movieGenre, created in the movies controller-->
+        Genre: @Html.DropDownList("movieGenre", "All")
+        
+        <!-- Submit the search form data-->
+        <input type="submit" value="Filter"/>
+    </p>
+    }
 </p>
 <table class="table">
     <tr>

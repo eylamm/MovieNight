@@ -15,10 +15,42 @@ namespace MovieNight.Controllers
         private MovieNightDB db = new MovieNightDB();
 
         // GET: Movies
-        public ActionResult Index()
+        public ActionResult Index(string searchString, string movieGenre)
         {
-            var movies = db.Movies.Include(m => m.Director);
-            return View(movies.ToList());
+            // Create a new genre list
+            var GenreLst = new List<string>();
+
+            // Create a query to find all genres in the movies DB
+            var GenreQry = from d in db.Movies
+                           orderby d.Genre
+                           select d.Genre;
+
+            // Add only distinct genres to the genre list
+            GenreLst.AddRange(GenreQry.Distinct());
+
+            // Add the list to the viewbag object, so we can list it in the view - html dropdown list
+            ViewBag.movieGenre = new SelectList(GenreLst);
+
+            // Create the movie query
+            var movies = from m in db.Movies
+                         select m;
+
+            // Check the search string wanted by the user
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                // Select all the movies with the spciefied string in it's title
+                movies = movies.Where(s => s.Title.Contains(searchString));
+            }
+
+            // Check the wante movie genre to search
+            if (!string.IsNullOrEmpty(movieGenre))
+            {
+                // Select all movies with that genre
+                movies = movies.Where(x => x.Genre == movieGenre);
+            }
+
+            // Return the movies after filtering, with the thier director data (forigen key)
+            return View(movies.Include(s => s.Director));
         }
 
         // GET: Movies/Details/5
