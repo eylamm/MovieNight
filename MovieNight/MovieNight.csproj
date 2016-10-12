@@ -204,6 +204,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610120720127_Initial_MovieNightDB.cs" />
+    <Compile Include="Migrations\201610120720127_Initial_MovieNightDB.Designer.cs">
+      <DependentUpon>201610120720127_Initial_MovieNightDB.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Director.cs" />
@@ -304,6 +308,11 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201610120720127_Initial_MovieNightDB.resx">
+      <DependentUpon>201610120720127_Initial_MovieNightDB.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
