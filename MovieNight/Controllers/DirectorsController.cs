@@ -15,9 +15,47 @@ namespace MovieNight.Controllers
         private MovieNightDB db = new MovieNightDB();
 
         // GET: Directors
-        public ActionResult Index()
+        public ActionResult Index(string directorName, string directorGender, string directorOrigin)
         {
-            return View(db.Directors.ToList());
+            // Create the Directors query - all the directors in the db
+            var DirectorsQry = from director in db.Directors
+                               select director;
+
+            // Initalize the viewbag with the possible genders
+            ViewBag.directorGender = new SelectList(Enum.GetValues(typeof(Gender)));
+
+            // Create a new genre list
+            var OriginLst = new List<string>();
+
+            // Add only distinct gendres to the gendre list
+            OriginLst.AddRange(DirectorsQry.Select(director => director.Origin).Distinct());
+
+            // Add the list to the viewbag object, so we can list it in the view - html dropdown list
+            ViewBag.directorOrigin = new SelectList(OriginLst);
+
+            // Check the search string wanted by the user
+            if (!String.IsNullOrEmpty(directorName))
+            {
+                // Select all the directors with the specified string in their name
+                DirectorsQry = DirectorsQry.Where(director => director.FirstName.Contains(directorName) || director.LastName.Contains(directorName));
+            }
+
+            // Check the wanted gender to search by
+            if (!string.IsNullOrEmpty(directorGender))
+            {
+                // Select all the directors of that gender
+                DirectorsQry = DirectorsQry.Where(director => director.Gender.ToString().Equals(directorGender));
+            }
+
+            // Check the search string wanted by the user
+            if (!String.IsNullOrEmpty(directorOrigin))
+            {
+                // Select the directors from that origin
+                DirectorsQry = DirectorsQry.Where(director => director.Origin.Equals(directorOrigin));
+            }
+
+            // Return the directors found
+            return View(DirectorsQry);
         }
 
         // GET: Directors/Details/5

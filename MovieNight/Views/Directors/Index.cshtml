@@ -5,10 +5,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Directors</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
+    
+    <!-- Set a new html form, wich will be submmited using get method, so that the search parameters are visible in the url -->
+    @using (Html.BeginForm("Index", "Directors", FormMethod.Get))
+    {
+    <p>
+        <!-- Search a Director based on it's Name-->
+        Name: @Html.TextBox("directorName")
+  
+        <!-- Search a Director based on it's date of birth-->
+       Gender: @Html.DropDownList("directorGender", "All")
+
+        <!-- Search a director based on it's origin, dropdown list populated with the html helper - directorOrigin, created in the director controller-->
+        Origin: @Html.DropDownList("directorOrigin", "All")
+
+        <!-- Submit the search form data-->
+        <input type="submit" value="Filter" />
+    </p>
+    }
 </p>
 <table class="table">
     <tr>
