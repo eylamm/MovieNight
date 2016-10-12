@@ -15,10 +15,34 @@ namespace MovieNight.Controllers
         private MovieNightDB db = new MovieNightDB();
 
         // GET: Reviews
-        public ActionResult Index()
+        public ActionResult Index(string criticName, string reviewedMovie, string reviewContent)
         {
-            var reviews = db.Reviews.Include(r => r.Movie);
-            return View(reviews.ToList());
+            // Create the reviews query
+            var ReviewQry = from r in db.Reviews
+                            select r;
+
+            // Check the search string wanted by the user
+            if (!String.IsNullOrEmpty(criticName))
+            {
+                // Select all the review with the spciefied string in it's critic's name
+                ReviewQry = ReviewQry.Where(review => review.CriticName.Contains(criticName));
+            }
+
+            // Check the search string wanted by the user
+            if (!String.IsNullOrEmpty(reviewedMovie))
+            {
+                // Select all the movies with the spciefied string in it's title
+                ReviewQry = ReviewQry.Where(review => review.Movie.Title.Contains(reviewedMovie));
+            }
+
+            // Check the search string wanted by the user
+            if (!String.IsNullOrEmpty(reviewContent))
+            {
+                // Select all the reviews with the spciefied string in it's content
+                ReviewQry = ReviewQry.Where(review => review.Content.Contains(reviewContent));
+            }
+
+            return View(ReviewQry.Include(r => r.Movie));
         }
 
         // GET: Reviews/Details/5
