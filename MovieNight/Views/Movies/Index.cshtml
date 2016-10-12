@@ -15,11 +15,14 @@
     {
         <p>
             <!-- Search a movie based on it's title-->
-            Title: @Html.TextBox("SearchString")
+            Title: @Html.TextBox("searchString")
+
+            <!-- Search a movie based on it's Director-->
+            Director: @Html.TextBox("searchDirector")
 
             <!-- Search a movie based on it's genre, dropdown list populated with the html helper - movieGenre, created in the movies controller-->
             Genre: @Html.DropDownList("movieGenre", "All")
-        
+                                
             <!-- Submit the search form data-->
             <input type="submit" value="Filter"/>
         </p>
@@ -28,7 +31,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Director.FirstName)
+             Director
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Title)

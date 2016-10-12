@@ -15,8 +15,21 @@ namespace MovieNight.Controllers
         private MovieNightDB db = new MovieNightDB();
 
         // GET: Movies
-        public ActionResult Index(string searchString, string movieGenre)
+        public ActionResult Index(string searchString, string movieGenre, string searchDirector)
         {
+            /*******************************/
+            /****** Search by Director *****/
+            /*******************************/
+
+            // Create the Directors query - all directors with an id spcified in the movies table
+            var DirectorsQry = from director in db.Directors
+                               join movie in db.Movies on director.ID equals movie.DirectorID
+                               select new { DirectorID = director.ID, DirectorFirstName = director.FirstName, DirectorLastName = director.LastName };
+
+            /******************************/
+            /******* Search by Genre ******/
+            /******************************/
+
             // Create a new genre list
             var GenreLst = new List<string>();
 
@@ -31,26 +44,49 @@ namespace MovieNight.Controllers
             // Add the list to the viewbag object, so we can list it in the view - html dropdown list
             ViewBag.movieGenre = new SelectList(GenreLst);
 
+            /*******************************/
+            /****** Search by Title ********/
+            /*******************************/
+
             // Create the movie query
-            var movies = from m in db.Movies
-                         select m;
+            var MoviesQuery = from m in db.Movies
+                              select m;
+
+            /*********************************/
+            /****** Apply Search Filters *****/
+            /*********************************/
 
             // Check the search string wanted by the user
             if (!String.IsNullOrEmpty(searchString))
             {
                 // Select all the movies with the spciefied string in it's title
-                movies = movies.Where(s => s.Title.Contains(searchString));
+                MoviesQuery = MoviesQuery.Where(s => s.Title.Contains(searchString));
             }
 
             // Check the wante movie genre to search
             if (!string.IsNullOrEmpty(movieGenre))
             {
                 // Select all movies with that genre
-                movies = movies.Where(x => x.Genre == movieGenre);
+                MoviesQuery = MoviesQuery.Where(x => x.Genre == movieGenre);
+            }
+
+            // Check the search string wanted by the user
+            if (!String.IsNullOrEmpty(searchDirector))
+            {
+                // Select the directors with the wanted string in their names
+                DirectorsQry = DirectorsQry.Distinct().Where(d => d.DirectorFirstName.Contains(searchDirector) || d.DirectorLastName.Contains(searchDirector));
+
+                // Select the movies with the wanted director's ID
+                var moviesByDirector = from movie in db.Movies
+                                       join director in DirectorsQry on movie.DirectorID equals director.DirectorID
+                                       select movie.ID;
+
+                // Select the movies with the wanted director's ID
+                MoviesQuery = MoviesQuery.Where(x => moviesByDirector.Contains(x.ID));
             }
 
             // Return the movies after filtering, with the thier director data (forigen key)
-            return View(movies.Include(s => s.Director));
+            return View(MoviesQuery.Include(s => s.Director));
         }
 
         // GET: Movies/Details/5
