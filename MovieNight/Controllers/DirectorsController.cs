@@ -17,6 +17,11 @@ namespace MovieNight.Controllers
         // GET: Directors
         public ActionResult Index(string directorName, string directorGender, string directorOrigin)
         {
+            // Set values received to keep the form withs its values
+            ViewBag.directorName = directorName;
+            ViewBag.selectedGender = directorGender;
+            ViewBag.selectedOrigin = directorOrigin;
+
             /*****************************/
             /******* Search by Name ******/
             /*****************************/
@@ -57,21 +62,21 @@ namespace MovieNight.Controllers
             }
 
             // Check the wanted gender to search by
-            if (!string.IsNullOrEmpty(directorGender))
+            if (!string.IsNullOrEmpty(directorGender) && !directorGender.Equals("All"))
             {
                 // Select all the directors of that gender
                 DirectorsQry = DirectorsQry.Where(director => director.Gender.ToString().Equals(directorGender));
             }
 
-            // Check the search string wanted by the user
-            if (!String.IsNullOrEmpty(directorOrigin))
+            // Check the search string wanted by the user - and is not All
+            if (!String.IsNullOrEmpty(directorOrigin) && !directorOrigin.Equals("All"))
             {
                 // Select the directors from that origin
                 DirectorsQry = DirectorsQry.Where(director => director.Origin.Equals(directorOrigin));
             }
 
             // Return the directors found
-            return View(DirectorsQry);
+            return View(DirectorsQry.Include(s => s.Movies));
         }
 
         // GET: Directors/Details/5

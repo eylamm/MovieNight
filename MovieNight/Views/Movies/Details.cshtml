@@ -4,48 +4,102 @@
     ViewBag.Title = Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div>
+    <div class="row">
+        <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Poster" alt="@Model.Title" style="width:300px; height:300px;">
+        <div class="col-md-6 col-sm-6 col-lg-6">
+            <h1 class="pull-left">@Model.Title</h1>
+            <br />
+            <h4 class="pull-right">@Model.ReleaseDate.ToShortDateString()</h4>
+            <br /><br />
+            <h4 class="pull-right">@Model.Rating <span class="glyphicon glyphicon-star"></span></h4>
+            <br />
+            <p>
 
-    <div>
-        <div class="row">
-            <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Poster" alt="@Model.Title" style="width:300px; height:300px;">
-            <div class="col-md-6 col-sm-6 col-lg-6">
-                <h1 class="pull-left">@Model.Title</h1>
-                <br />
-                <h4 class="pull-right">@Model.ReleaseDate.ToShortDateString()</h4>
-                <br /><br />
-                <h4 class="pull-right">@Model.Rating <span class="glyphicon glyphicon-star"></span></h4>
-                <br />
-                <p>
-                    
-                    @foreach (var genre in Model.Genre.Split(','))
-                    {
-                        <button class="btn btn-sm btn-default">@Html.ActionLink(genre, "Index", "Movies", new { genre = genre }, null)</button>
-                    }
-                </p>
-                <p><b>Plot: </b>@Model.Plot</p>
-                <p><b>Director: </b>@Html.ActionLink(Model.Director.FirstName + " " + Model.Director.LastName, "Details", "Directors", new { id = Model.DirectorID }, null)</p>
-            </div>
+                @foreach (var genre in Model.Genre.Split(','))
+                {
+                    <button class="btn btn-sm btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
+                }
+            </p>
+            <p><b>Plot: </b>@Model.Plot</p>
+            <p><b>Director: </b>@Html.ActionLink(Model.Director.FirstName + " " + Model.Director.LastName, "Details", "Directors", new { id = Model.DirectorID }, null)</p>
         </div>
-        <div class="row">
-            <div class="col-sm-7">
-                <p class="pull-right">@Model.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>
-                <hr />
-                <div class="review-block">
-                    @foreach (var item in Model.Reviews)
+    </div>
+    <div class="row">
+        <div>
+            <h4 class="pull-right">@Model.Reviews.Count <span class="glyphicon glyphicon-comment"></span></h4>
+            <br />
+            <hr />
+            <div class="review-block">
+                @if (Model.Reviews.Count == 0)
+                {
+                    <div class="row">
+                        <div class="panel-body">No Reviews Yet.</div>
+                    </div>
+                }
+                else
+                {
+                    foreach (var item in Model.Reviews)
                     {
                         <div class="row">
-                            <div class="col-sm-3">
-                                <div class="review-block-name"><a href="#">@item.CriticName</a></div>
-                                <div class="review-block-date">@item.Date.ToShortDateString()</div>
+                            <div class="col-sm-1">
+                                <div>
+                                    <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                                </div>
+                            </div><!-- /col-sm-1 -->
+
+                            <div class="col-sm-5">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <strong>@item.CriticName</strong> <span class="text-muted">@item.Date.ToShortDateString()</span>
+                                    </div>
+                                    <div class="panel-body">
+                                        @item.Content
+                                    </div><!-- /panel-body -->
+                                </div><!-- /panel panel-default -->
+                            </div><!-- /col-sm-5 -->
+                        </div>
+                    }
+                }
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="well well-sm">
+                            <div class="text-right">
+                                <a class="btn btn-success btn-green" href="#post-review-box" data-toggle="collapse" id="open-review-box">Leave a Review</a>
                             </div>
-                            <div class="col-sm-9">
-                                <div class="review-block-description">@item.Content</div>
+                            <div class="row collapse" id="post-review-box">
+                                <br />
+  
+                                    <div class="col-md-12">
+                                        <form accept-charset="UTF-8" action="/Reviews/Create" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <input id="returnUrl" name="returnUrl" value="@this.Request.RawUrl" style="display:none;" />
+                                            <input id="MovieID" name="MovieID" value="@Model.ID" style="display:none;" />
+                                            <input id="Date" name="Date" value="@DateTime.Now" style="display:none;" />
+                                            <input required class="form-control text-box single-line animated" id="CriticName" type="text" data-val="true" data-val-required="The Name is requiered" name="CriticName" placeholder="Enter your name here..." />
+                                            <br />
+                                            <textarea required class="form-control animated" cols="50" id="Content" name="Content" placeholder="Enter your review here..." rows="5"></textarea>
+
+                                            <div class="text-right">
+                                                <br />
+                                                <a class="btn btn-danger btn-sm" href="#post-review-box" data-toggle="collapse" id="close-review-box" ">
+                                                    <span class="glyphicon glyphicon-remove"></span> Cancel
+                                                </a>
+                                                <button class="btn btn-success btn-sm" type="submit"><span class="glyphicon glyphicon-save"></span> Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                
+                                </div>
+                                
                             </div>
 
                         </div>
-                    }
+                    </div>
+
                 </div>
-                <hr />
             </div>
         </div>
     </div>

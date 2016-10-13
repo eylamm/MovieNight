@@ -145,13 +145,18 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,CriticName,Date,MovieID,Content")] Review review)
+        public ActionResult Create([Bind(Include = "ID,CriticName,Date,MovieID,Content")] Review review, string returnUrl)
         {
             if (ModelState.IsValid)
             {
                 db.Reviews.Add(review);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                if (String.IsNullOrEmpty(returnUrl))
+                {
+                    return RedirectToAction("Index");
+                }
+
+                return Redirect(returnUrl);
             }
 
             ViewBag.MovieID = new SelectList(db.Movies, "ID", "Title", review.MovieID);

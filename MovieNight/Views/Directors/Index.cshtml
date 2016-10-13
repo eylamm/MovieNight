@@ -1,82 +1,92 @@
 ﻿@model IEnumerable<MovieNight.Models.Director>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Directors";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Directors</h2>
+<div class="row">
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-    
-    <!-- Set a new html form, wich will be submmited using get method, so that the search parameters are visible in the url -->
-    @using (Html.BeginForm("Index", "Directors", FormMethod.Get))
-    {
-    <p>
-        <!-- Search a Director based on it's Name-->
-        Name: @Html.TextBox("directorName")
-  
-        <!-- Search a Director based on it's date of birth-->
-       Gender: @Html.DropDownList("directorGender", "All")
+    <div class="col-md-3">
+        <p class="lead">Filter</p>
+        <form>
+            <div class="list-group">
+                <div class="list-group-item">
+                    <input type="text" class="search-query form-control" placeholder="Director's Name" id="directorName" name="directorName" value="@ViewBag.directorName"/>
+                </div>
+                <div class="list-group-item">
+                    <select class="form-control" name="directorGender" id="directorGender">
+                        <option>All</option>
+                        @foreach (var gender in ViewBag.directorGender)
+                        {
+                            if (ViewBag.selectedGender == gender.Text)
+                            {
+                                <option selected>@gender.Text</option>
+                            }
+                            else
+                            {
+                                <option>@gender.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="list-group-item">
+                    <select class="form-control" name="directorOrigin" id="directorOrigin">
+                        <option>All</option>
+                        @foreach (var origin in ViewBag.directorOrigin)
+                        {
+                            if (ViewBag.selectedOrigin == origin.Text)
+                            {
+                                <option selected>@origin.Text</option>
+                            }
+                            else
+                            {
+                                <option>@origin.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="list-group-item">
+                    <button class="btn-group-sm form-control">Apply Filter</button>
+                </div>
+            </div>
+        </form>
 
-        <!-- Search a director based on it's origin, dropdown list populated with the html helper - directorOrigin, created in the director controller-->
-        Origin: @Html.DropDownList("directorOrigin", "All")
+        <form>
+            <button class="btn-group-sm form-control">Clear Filter</button>
+        </form>
+    </div>
 
-        <!-- Submit the search form data-->
-        <input type="submit" value="Filter" />
-    </p>
-    }
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Gender)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Origin)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Picture)
-        </th>
-        <th></th>
-    </tr>
+    <div class="col-md-9">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Gender)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateOfBirth)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Origin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Picture)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
+        <div class="row">
 
-</table>
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                <div class="container-fluid well span9">
+                    <div class="row-fluid">
+                        <div class="col-md-3">
+                            <img src="@item.Picture" class="img-circle" style="width:150px; height:150px;">
+                        </div>
+
+                        <div class="col-md-6">
+                            <h3>@Html.ActionLink(item.FirstName + " " + item.LastName, "Details", new { id = item.ID })</h3>
+                            <h6>Origin: @item.Origin</h6>
+                            <h6>Gender: @item.Gender.ToString()</h6>
+                            <h6>BirthDay: @item.DateOfBirth.ToShortDateString()</h6>
+                            <h6>Movies: @item.Movies.Count <span class="glyphicon glyphicon-facetime-video"></span></h6>
+                        </div>
+                    </div>
+                </div>
+                }
+            }
+            else
+            {
+                <div class="container-fluid well span9">
+                    No Directors found, Try removing some of the filters.
+                </div>
+            }
+    </div>
+</div>

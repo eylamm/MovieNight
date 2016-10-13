@@ -1,67 +1,56 @@
 ﻿@model MovieNight.Models.Director
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.FirstName + " " + Model.LastName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
-
 <div>
-    <h4>Director</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
+    <div class="row">
+        <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Picture" alt="@Model.FirstName @Model.LastName" style="width:300px; height:300px;">
+        <div class="col-md-6 col-sm-6 col-lg-6">
+            <h1>@Model.FirstName @Model.LastName</h1>
+            <p><b>First Name: </b>@Model.FirstName</p>
+            <p><b>Last Name: </b>@Model.LastName</p>
+            <p><b>Origin: </b>@Model.Origin</p>
+            <p><b>Gender: </b>@Model.Gender.ToString()</p>
+            <p><b>BirthDay: </b>@Model.DateOfBirth.ToShortDateString()</p>
 
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
+            <h4 class="pull-right">@Model.Movies.Count <span class="glyphicon glyphicon-facetime-video"></span></h4>
+            <br />
+            <hr />
+            <div class="review-block">
+                @if (Model.Movies.Count == 0)
+                {
+                    <div class="row">
+                        <div class="panel-body">No Movies Yet.</div>
+                    </div>
+                }
+                else
+                {
+                    foreach (var item in Model.Movies)
+                    {
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div>
+                                    <img class="img-responsive user-photo" src="@item.Poster">
+                                </div>
+                            </div><!-- /col-sm-1 -->
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DateOfBirth)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Origin)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Origin)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Picture)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Picture)
-        </dd>
-
-    </dl>
+                            <div class="col-sm-7">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <strong>@Html.ActionLink(item.Title, "Details", "Movies", new { id = item.ID }, null)</strong> <span class="text-muted">@item.ReleaseDate.ToShortDateString()</span>
+                                    </div>
+                                    <div class="panel-body">
+                                        @item.Plot
+                                    </div><!-- /panel-body -->
+                                </div><!-- /panel panel-default -->
+                            </div><!-- /col-sm-5 -->
+                        </div>
+                        <hr/>
+                    }
+                }
+            </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

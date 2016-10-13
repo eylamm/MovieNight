@@ -15,8 +15,14 @@ namespace MovieNight.Controllers
         private MovieNightDB db = new MovieNightDB();
 
         // GET: Movies
-        public ActionResult Index(string searchString, string movieGenre, string searchDirector)
+        public ActionResult Index(string searchString, string movieGenre, string searchDirector, string orderBy)
         {
+            // Set values received to keep the form withs its values
+            ViewBag.searchString = searchString;
+            ViewBag.selectedGenre = movieGenre;
+            ViewBag.searchDirector = searchDirector;
+            ViewBag.orderBy = orderBy;
+
             /*******************************/
             /****** Search by Director *****/
             /*******************************/
@@ -38,8 +44,18 @@ namespace MovieNight.Controllers
                            orderby d.Genre
                            select d.Genre;
 
+
             // Add only distinct genres to the genre list
-            GenreLst.AddRange(GenreQry.Distinct());
+            foreach (var genreRow in GenreQry)
+            {
+                foreach (var genre in genreRow.Split(','))
+                {
+                    if (!GenreLst.Contains(genre.Trim()))
+                    {
+                        GenreLst.Add(genre.Trim());
+                    }
+                }
+            }
 
             // Add the list to the viewbag object, so we can list it in the view - html dropdown list
             ViewBag.movieGenre = new SelectList(GenreLst);
@@ -64,10 +80,10 @@ namespace MovieNight.Controllers
             }
 
             // Check the wante movie genre to search
-            if (!string.IsNullOrEmpty(movieGenre))
+            if (!string.IsNullOrEmpty(movieGenre) && !movieGenre.Equals("All"))
             {
                 // Select all movies with that genre
-                MoviesQuery = MoviesQuery.Where(x => x.Genre == movieGenre);
+                MoviesQuery = MoviesQuery.Where(x => x.Genre.Contains(movieGenre));
             }
 
             // Check the search string wanted by the user
@@ -78,6 +94,18 @@ namespace MovieNight.Controllers
 
                 // Select all the movies with the wanted director ID
                 MoviesQuery = MoviesQuery.Where(movie => DirectorsQry.Select(director => director.ID).Contains(movie.DirectorID));
+            }
+
+            if (!String.IsNullOrEmpty(orderBy))
+            {
+                if (orderBy.Equals("TopRated"))
+                {
+                    MoviesQuery = MoviesQuery.OrderByDescending(movie => movie.Rating);
+                }
+                else if (orderBy.Equals("Newest"))
+                {
+                    MoviesQuery = MoviesQuery.OrderByDescending(movie => movie.ReleaseDate);
+                }
             }
 
             // Return the movies after filtering, with the thier director data (forigen key)

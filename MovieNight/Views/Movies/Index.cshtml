@@ -8,45 +8,96 @@
 <div class="row">
 
     <div class="col-md-3">
-        <p class="lead">Order By</p>
-        <div class="list-group">
-            <a href="TopRated" class="list-group-item">Top Rated Movies</a>
-            <a href="Recent" class="list-group-item">Recent Releases</a>
-            <a href="Index" class="list-group-item">All Movies</a>
-        </div>
+        <form>
+            <p class="lead">View</p>
+            <div class="list-group">
+                <div class="list-group-item">
+                    <button id="orderBy" name="orderBy" value="TopRated" class="btn-group-sm form-control" type="submit">Top Rated Movies</button>
+                </div>
+                <div class="list-group-item">
+                    <button id="orderBy" name="orderBy" value="Newest" class="btn-group-sm form-control" type="submit">Recent Releases</button>
+                </div>
+                <div class="list-group-item">
+                    <button id="orderBy" name="orderBy" value="" class="btn-group-sm form-control" type="submit">All Movies</button>
+                </div>
+                </div>
+                <br />
+
+                <p class="lead">Filter</p>
+
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <select class="form-control" name="movieGenre" id="movieGenre">
+                            <option>All</option>
+                            @foreach (var genre in ViewBag.movieGenre)
+                            {
+                                if (ViewBag.selectedGenre == genre.Text)
+                                {
+                                    <option selected>@genre.Text</option>
+                                }
+                                else
+                                {
+                                    <option>@genre.Text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="list-group-item">
+                        <input type="text" class="search-query form-control" placeholder="Director's Name" id="searchDirector" name="searchDirector" value="@ViewBag.searchDirector" />
+                    </div>
+                    <div class="list-group-item">
+                        <input type="text" class="search-query form-control" placeholder="Movie's Name" id="searchString" name="searchString" value="@ViewBag.searchString" />
+                    </div>
+                    <div class="list-group-item">
+                        <button id="orderBy" name="orderBy" value="@ViewBag.orderBy" class="btn-group-sm form-control">Apply Filter</button>
+                    </div>
+                </div>
+        </form>
+        <form>
+            <button class="btn-group-sm form-control">Clear Filter</button>
+        </form>
     </div>
 
     <div class="col-md-9">
 
         <div class="row">
 
-        @foreach (var item in Model)
-        {
-            <div class="col-sm-4 col-lg-4 col-md-4">
-                <div class="thumbnail">
-                    <img src="@item.Poster" alt="@item.Title">
-                    <div class="caption">
-                        <h4>
-                            @Html.ActionLink(item.Title, "Details", new { id = item.ID })
-                        </h4>
-                        <h4 class="pull-right">@item.ReleaseDate.Year</h4>
-                        <br /><br />
-                        <p>
-                        @foreach (var genre in item.Genre.Split(','))
-                        {
-                            <button class="btn btn-xs btn-default">@Html.ActionLink(genre, "Index", "Movies", new { genre = genre }, null)</button>
-                        }
-                        </p>
+            @if (Model.Count() > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="col-sm-4 col-lg-4 col-md-4">
+                        <div class="thumbnail">
+                            <img src="@item.Poster" alt="@item.Title">
+                            <div class="caption">
+                                <h4>
+                                    @Html.ActionLink(item.Title, "Details", new { id = item.ID })
+                                </h4>
+                                <h4 class="pull-right">@item.ReleaseDate.Year</h4>
+                                <br /><br />
+                                <p>
+                                    @foreach (var genre in item.Genre.Split(','))
+                                    {
+                                        <button class="btn btn-xs btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
+                                    }
+                                </p>
+                            </div>
+                            <div class="ratings">
+                                <p class="pull-right">@item.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>
+                                <p>
+                                    @item.Rating <span class="glyphicon glyphicon-star"></span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ratings">
-                        <p class="pull-right">@item.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>
-                        <p>
-                            @item.Rating <span class="glyphicon glyphicon-star"></span>
-                        </p>
-                    </div>
+                }
+            }
+            else
+            {
+                <div class="container-fluid well span9">
+                    No Movies found, Try removing some of the filters.
                 </div>
-            </div>
-        }
+            }
 
         </div>
     </div>
