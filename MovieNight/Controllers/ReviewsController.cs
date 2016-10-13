@@ -15,7 +15,7 @@ namespace MovieNight.Controllers
         private MovieNightDB db = new MovieNightDB();
 
         // GET: Reviews
-        public ActionResult Index(string criticName, string reviewedMovie, string reviewContent)
+        public ActionResult Index(string criticName, string reviewedMovie, string reviewContent, string groupByMovie)
         {
             /********************************************/
             /****** Search by Content or CriticName *****/
@@ -33,6 +33,15 @@ namespace MovieNight.Controllers
             var MoviesQry = from movie in db.Movies
                             join review in db.Reviews on movie.ID equals review.MovieID
                             select movie;
+
+            // Create a new movie list
+            var MovieLst = new List<string>();
+
+            // Add only distinct genres to the genre list
+            MovieLst.AddRange(MoviesQry.Select(movie => movie.Title).Distinct());
+
+            // Initalize html helper with the list of movies that have been reviewed
+            ViewBag.groupByMovie = new SelectList(MovieLst);
 
             /*********************************/
             /****** Apply Search Filters *****/
@@ -62,8 +71,51 @@ namespace MovieNight.Controllers
                 ReviewQry = ReviewQry.Where(review => review.Content.Contains(reviewContent));
             }
 
+            // Check the search string wanted by the user
+            if (!String.IsNullOrEmpty(groupByMovie))
+            {
+                // Select the critics grouped by name
+                var GroupbyRes = ReviewQry.GroupBy(r => r.Movie.Title).Select(lst => new { Name = lst.Key, Count = lst.Count() });
+            }
+
             // Return the wanted reviews with the movie object to show - movie title
             return View(ReviewQry.Include(r => r.Movie));
+        }
+
+        // GET: Reviews/GroupBy
+        public ActionResult GroupBy(string groupByMovie)
+        {
+            // Create the movies query - all movies with an id spcified in the review table
+            var MoviesQry = from movie in db.Movies
+                            join review in db.Reviews on movie.ID equals review.MovieID
+                            select movie;
+
+            // Create a new movie list
+            var MovieLst = new List<string>();
+
+            // Add only distinct genres to the genre list
+            MovieLst.AddRange(MoviesQry.Select(movie => movie.Title).Distinct());
+
+            // Initalize html helper with the list of movies that have been reviewed
+            ViewBag.groupByMovie = new SelectList(MovieLst);
+
+            var results = from p in db.Reviews
+                          group p by p.Movie.Title into g
+                          select new RenderView { MovieTitle = g.Key, ReviewCount = g.Count() };
+
+            // If we wnat to group by all movies
+            if (groupByMovie.Equals(""))
+            {
+                // Return all reviewed grouped by movie title
+                return View(results);
+            }
+
+            // If the user wants to group by a specifiec movie
+            else
+            {
+                // Select the specified movie 
+                return View(results);
+            }
         }
 
         // GET: Reviews/Details/5
