@@ -17,9 +17,26 @@ namespace MovieNight.Controllers
         // GET: Reviews
         public ActionResult Index(string criticName, string reviewedMovie, string reviewContent)
         {
+            /********************************************/
+            /****** Search by Content or CriticName *****/
+            /********************************************/
+
             // Create the reviews query
             var ReviewQry = from r in db.Reviews
                             select r;
+
+            /*******************************/
+            /******** Search by Movie ******/
+            /*******************************/
+
+            // Create the movies query - all movies with an id spcified in the review table
+            var MoviesQry = from movie in db.Movies
+                            join review in db.Reviews on movie.ID equals review.MovieID
+                            select movie;
+
+            /*********************************/
+            /****** Apply Search Filters *****/
+            /*********************************/
 
             // Check the search string wanted by the user
             if (!String.IsNullOrEmpty(criticName))
@@ -31,8 +48,11 @@ namespace MovieNight.Controllers
             // Check the search string wanted by the user
             if (!String.IsNullOrEmpty(reviewedMovie))
             {
-                // Select all the movies with the spciefied string in it's title
-                ReviewQry = ReviewQry.Where(review => review.Movie.Title.Contains(reviewedMovie));
+                // Search for the movies with titles matching the search string
+                MoviesQry = MoviesQry.Where(movie => movie.Title.Contains(reviewedMovie));
+
+                // Get all reviews with the wanted movie ID
+                ReviewQry = ReviewQry.Where(review => MoviesQry.Select(movie => movie.ID).Contains(review.MovieID));
             }
 
             // Check the search string wanted by the user
@@ -42,6 +62,7 @@ namespace MovieNight.Controllers
                 ReviewQry = ReviewQry.Where(review => review.Content.Contains(reviewContent));
             }
 
+            // Return the wanted reviews with the movie object to show - movie title
             return View(ReviewQry.Include(r => r.Movie));
         }
 

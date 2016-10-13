@@ -17,12 +17,24 @@ namespace MovieNight.Controllers
         // GET: Directors
         public ActionResult Index(string directorName, string directorGender, string directorOrigin)
         {
+            /*****************************/
+            /******* Search by Name ******/
+            /*****************************/
+
             // Create the Directors query - all the directors in the db
             var DirectorsQry = from director in db.Directors
                                select director;
 
+            /*******************************/
+            /******* Search by Gender ******/
+            /*******************************/
+
             // Initalize the viewbag with the possible genders
             ViewBag.directorGender = new SelectList(Enum.GetValues(typeof(Gender)));
+
+            /********************************/
+            /******* Search by Origing ******/
+            /********************************/
 
             // Create a new genre list
             var OriginLst = new List<string>();
@@ -32,6 +44,10 @@ namespace MovieNight.Controllers
 
             // Add the list to the viewbag object, so we can list it in the view - html dropdown list
             ViewBag.directorOrigin = new SelectList(OriginLst);
+
+            /*********************************/
+            /****** Apply Search Filters *****/
+            /*********************************/
 
             // Check the search string wanted by the user
             if (!String.IsNullOrEmpty(directorName))

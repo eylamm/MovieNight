@@ -24,7 +24,7 @@ namespace MovieNight.Controllers
             // Create the Directors query - all directors with an id spcified in the movies table
             var DirectorsQry = from director in db.Directors
                                join movie in db.Movies on director.ID equals movie.DirectorID
-                               select new { DirectorID = director.ID, DirectorFirstName = director.FirstName, DirectorLastName = director.LastName };
+                               select director;
 
             /******************************/
             /******* Search by Genre ******/
@@ -74,15 +74,10 @@ namespace MovieNight.Controllers
             if (!String.IsNullOrEmpty(searchDirector))
             {
                 // Select the directors with the wanted string in their names
-                DirectorsQry = DirectorsQry.Distinct().Where(d => d.DirectorFirstName.Contains(searchDirector) || d.DirectorLastName.Contains(searchDirector));
+                DirectorsQry = DirectorsQry.Where(d => d.FirstName.Contains(searchDirector) || d.LastName.Contains(searchDirector));
 
-                // Select the movies with the wanted director's ID
-                var moviesByDirector = from movie in db.Movies
-                                       join director in DirectorsQry on movie.DirectorID equals director.DirectorID
-                                       select movie.ID;
-
-                // Select the movies with the wanted director's ID
-                MoviesQuery = MoviesQuery.Where(x => moviesByDirector.Contains(x.ID));
+                // Select all the movies with the wanted director ID
+                MoviesQuery = MoviesQuery.Where(movie => DirectorsQry.Select(director => director.ID).Contains(movie.DirectorID));
             }
 
             // Return the movies after filtering, with the thier director data (forigen key)
