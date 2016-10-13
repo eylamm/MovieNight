@@ -1,94 +1,53 @@
 ﻿@model IEnumerable<MovieNight.Models.Movie>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Movie Night";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Movies</h2>
+<div class="row">
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-    
-    <!-- Set a new html form, wich will be submmited using get method, so that the search parameters are visible in the url -->
-    @using (Html.BeginForm("Index", "Movies", FormMethod.Get))
-    {
-        <p>
-            <!-- Search a movie based on it's title-->
-            Title: @Html.TextBox("searchString")
+    <div class="col-md-3">
+        <p class="lead">Order By</p>
+        <div class="list-group">
+            <a href="TopRated" class="list-group-item">Top Rated Movies</a>
+            <a href="Recent" class="list-group-item">Recent Releases</a>
+            <a href="Index" class="list-group-item">All Movies</a>
+        </div>
+    </div>
 
-            <!-- Search a movie based on it's Director-->
-            Director: @Html.TextBox("searchDirector")
+    <div class="col-md-9">
 
-            <!-- Search a movie based on it's genre, dropdown list populated with the html helper - movieGenre, created in the movies controller-->
-            Genre: @Html.DropDownList("movieGenre", "All")
-                                
-            <!-- Submit the search form data-->
-            <input type="submit" value="Filter"/>
-        </p>
-    }
-</p>
-<table class="table">
-    <tr>
-        <th>
-             Director
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ReleaseDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Genre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Plot)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Rating)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Poster)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Trailer)
-        </th>
-        <th></th>
-    </tr>
+        <div class="row">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Director.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReleaseDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Genre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Plot)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Rating)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Poster)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Trailer)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-4 col-lg-4 col-md-4">
+                <div class="thumbnail">
+                    <img src="@item.Poster" alt="@item.Title">
+                    <div class="caption">
+                        <h4>
+                            @Html.ActionLink(item.Title, "Details", new { id = item.ID })
+                        </h4>
+                        <h4 class="pull-right">@item.ReleaseDate.Year</h4>
+                        <br /><br />
+                        <p>
+                        @foreach (var genre in item.Genre.Split(','))
+                        {
+                            <button class="btn btn-xs btn-default">@Html.ActionLink(genre, "Index", "Movies", new { genre = genre }, null)</button>
+                        }
+                        </p>
+                    </div>
+                    <div class="ratings">
+                        <p class="pull-right">@item.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>
+                        <p>
+                            @item.Rating <span class="glyphicon glyphicon-star"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
 
-</table>
+        </div>
+    </div>
+</div>

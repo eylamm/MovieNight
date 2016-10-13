@@ -1,83 +1,51 @@
 ﻿@model MovieNight.Models.Movie
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+    <div>
+        <div class="row">
+            <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Poster" alt="@Model.Title" style="width:300px; height:300px;">
+            <div class="col-md-6 col-sm-6 col-lg-6">
+                <h1 class="pull-left">@Model.Title</h1>
+                <br />
+                <h4 class="pull-right">@Model.ReleaseDate.ToShortDateString()</h4>
+                <br /><br />
+                <h4 class="pull-right">@Model.Rating <span class="glyphicon glyphicon-star"></span></h4>
+                <br />
+                <p>
+                    
+                    @foreach (var genre in Model.Genre.Split(','))
+                    {
+                        <button class="btn btn-sm btn-default">@Html.ActionLink(genre, "Index", "Movies", new { genre = genre }, null)</button>
+                    }
+                </p>
+                <p><b>Plot: </b>@Model.Plot</p>
+                <p><b>Director: </b>@Html.ActionLink(Model.Director.FirstName + " " + Model.Director.LastName, "Details", "Directors", new { id = Model.DirectorID }, null)</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-7">
+                <p class="pull-right">@Model.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>
+                <hr />
+                <div class="review-block">
+                    @foreach (var item in Model.Reviews)
+                    {
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="review-block-name"><a href="#">@item.CriticName</a></div>
+                                <div class="review-block-date">@item.Date.ToShortDateString()</div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="review-block-description">@item.Content</div>
+                            </div>
 
-<div>
-    <h4>Movie</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Director.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Director.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ReleaseDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ReleaseDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Genre)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Genre)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Plot)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Plot)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Rating)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Rating)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Poster)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Poster)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Trailer)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Trailer)
-        </dd>
-
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+                        </div>
+                    }
+                </div>
+                <hr />
+            </div>
+        </div>
+    </div>

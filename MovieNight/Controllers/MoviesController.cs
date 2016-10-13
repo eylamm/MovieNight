@@ -81,7 +81,7 @@ namespace MovieNight.Controllers
             }
 
             // Return the movies after filtering, with the thier director data (forigen key)
-            return View(MoviesQuery.Include(s => s.Director));
+            return View(MoviesQuery.Include(s => s.Director).Include(s => s.Reviews));
         }
 
         // GET: Movies/Details/5
