@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,5 +27,11 @@ namespace MovieNight.Models
 
         [ForeignKey("MovieID")]
         public virtual Movie Movie { get; set; }
+    }
+
+    public class RenderView
+    {
+        public string MovieTitle { get; set; }
+        public int ReviewCount { get; set; }
     }
 }
