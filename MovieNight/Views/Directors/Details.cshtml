@@ -15,42 +15,70 @@
             <p><b>Origin: </b>@Model.Origin</p>
             <p><b>Gender: </b>@Model.Gender.ToString()</p>
             <p><b>BirthDay: </b>@Model.DateOfBirth.ToShortDateString()</p>
-
-            <h4 class="pull-right">@Model.Movies.Count <span class="glyphicon glyphicon-facetime-video"></span></h4>
-            <br />
-            <hr />
-            <div class="review-block">
-                @if (Model.Movies.Count == 0)
-                {
-                    <div class="row">
-                        <div class="panel-body">No Movies Yet.</div>
-                    </div>
-                }
-                else
-                {
-                    foreach (var item in Model.Movies)
-                    {
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <div>
-                                    <img class="img-responsive user-photo" src="@item.Poster">
+            
+            <div class="tabbable-panel">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a href="#tab_movies" data-toggle="tab">
+                                @Model.Movies.Count <span class="glyphicon glyphicon-facetime-video"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab_stats_stars" data-toggle="tab">
+                                <span class="glyphicon glyphicon-star"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab_stats_calendar" data-toggle="tab">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_movies">
+                            @if (Model.Movies.Count == 0)
+                            {
+                                <div class="row">
+                                    <div class="panel-body">No Movies Yet.</div>
                                 </div>
-                            </div><!-- /col-sm-1 -->
+                            }
+                            else
+                            {
+                                foreach (var item in Model.Movies)
+                                {
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <div>
+                                                <img class="img-responsive user-photo" src="@item.Poster">
+                                            </div>
+                                        </div>
 
-                            <div class="col-sm-7">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <strong>@Html.ActionLink(item.Title, "Details", "Movies", new { id = item.ID }, null)</strong> <span class="text-muted">@item.ReleaseDate.ToShortDateString()</span>
+                                        <div class="col-sm-7">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <strong>@Html.ActionLink(item.Title, "Details", "Movies", new { id = item.ID }, null)</strong> <span class="text-muted">@item.ReleaseDate.ToShortDateString()</span>
+                                                </div>
+                                                <div class="panel-body">
+                                                    @item.Plot
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="panel-body">
-                                        @item.Plot
-                                    </div><!-- /panel-body -->
-                                </div><!-- /panel panel-default -->
-                            </div><!-- /col-sm-5 -->
+                                }
+                            }
                         </div>
-                        <hr/>
-                    }
-                }
+                        <div class="tab-pane" id="tab_stats_stars">
+                            <p>Number of movies by ratings</p>
+                            
+                        </div>
+                        <div class="tab-pane" id="tab_stats_calendar">
+                            <p>Number of movies by years</p>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
             </div>
+        </div>
     </div>
 </div>
