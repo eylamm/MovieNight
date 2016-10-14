@@ -11,5 +11,6 @@ namespace MovieNight.Models
         public DbSet<Director> Directors { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

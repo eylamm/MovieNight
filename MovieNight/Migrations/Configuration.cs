@@ -1,18 +1,17 @@
 namespace MovieNight.Migrations
 {
+    using Models;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
-    using MovieNight.Models;
-    using System.Collections.Generic;
 
     internal sealed class Configuration : DbMigrationsConfiguration<MovieNight.Models.MovieNightDB>
     {
-        //  This method will be called after migrating to the latest version
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(MovieNight.Models.MovieNightDB context)
