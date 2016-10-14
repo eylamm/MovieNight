@@ -37,27 +37,9 @@
                     <li>
                         @Html.ActionLink("Directors", "Index", "Directors")
                     </li>
-                    <ul class="nav navbar-nav pull-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                Manage
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu">
-                                @if (false) //if user loged in
-                                {
-                                    <li>@Html.ActionLink("Manage Movies", "Manage", "Movies")</li>
-                                    <li>@Html.ActionLink("Manage Directors", "Manage", "Directors")</li>
-                                    <li>@Html.ActionLink("Manage Reviews", "Manage", "Reviews")</li>
-                                }
-                                else
-                                {
-                                    <li>@Html.ActionLink("Login", "Index", "Manage")</li>
-                                    <li>@Html.ActionLink("Register", "Register", "Manage")</li>
-                                }
-                            </ul>
-                        </li>
-                    </ul>
+                    <li class="pull-right">
+                        @Html.ActionLink("Manage", "Index", "Manage")
+                    </li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
