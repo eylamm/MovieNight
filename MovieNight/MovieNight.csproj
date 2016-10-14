@@ -212,6 +212,10 @@
     <Compile Include="Migrations\201610141427051_InitialCreate.Designer.cs">
       <DependentUpon>201610141427051_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610141903416_ititaial.cs" />
+    <Compile Include="Migrations\201610141903416_ititaial.Designer.cs">
+      <DependentUpon>201610141903416_ititaial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Director.cs" />
     <Compile Include="Models\Movie.cs" />
@@ -305,6 +309,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201610141427051_InitialCreate.resx">
       <DependentUpon>201610141427051_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610141903416_ititaial.resx">
+      <DependentUpon>201610141903416_ititaial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
