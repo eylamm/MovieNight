@@ -16,41 +16,266 @@
             <p><b>Gender: </b>@Model.Gender.ToString()</p>
             <p><b>BirthDay: </b>@Model.DateOfBirth.ToShortDateString()</p>
 
-            <h4 class="pull-right">@Model.Movies.Count <span class="glyphicon glyphicon-facetime-video"></span></h4>
-            <br />
-            <hr />
-            <div class="review-block">
-                @if (Model.Movies.Count == 0)
-                {
-                    <div class="row">
-                        <div class="panel-body">No Movies Yet.</div>
-                    </div>
-                }
-                else
-                {
-                    foreach (var item in Model.Movies)
-                    {
-                        <div class="row">
-                            <div class="col-sm-5">
-                                <div>
-                                    <img class="img-responsive user-photo" src="@item.Poster">
+            <div class="tabbable-panel">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a href="#tab_movies" data-toggle="tab">
+                                @Model.Movies.Count <span class="glyphicon glyphicon-facetime-video"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab_stats_stars" data-toggle="tab">
+                                <span class="glyphicon glyphicon-star"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab_stats_calendar" data-toggle="tab">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_movies">
+                            @if (Model.Movies.Count == 0)
+                            {
+                                <div class="row">
+                                    <div class="panel-body">No Movies Yet.</div>
                                 </div>
-                            </div><!-- /col-sm-1 -->
+                            }
+                            else
+                            {
+                                foreach (var item in Model.Movies)
+                                {
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            <div>
+                                                <img class="img-responsive user-photo" src="@item.Poster">
+                                            </div>
+                                        </div>
 
-                            <div class="col-sm-7">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <strong>@Html.ActionLink(item.Title, "Details", "Movies", new { id = item.ID }, null)</strong> <span class="text-muted">@item.ReleaseDate.ToShortDateString()</span>
+                                        <div class="col-sm-7">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <strong>@Html.ActionLink(item.Title, "Details", "Movies", new { id = item.ID }, null)</strong> <span class="text-muted">@item.ReleaseDate.ToShortDateString()</span>
+                                                </div>
+                                                <div class="panel-body">
+                                                    @item.Plot
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="panel-body">
-                                        @item.Plot
-                                    </div><!-- /panel-body -->
-                                </div><!-- /panel panel-default -->
-                            </div><!-- /col-sm-5 -->
+                                }
+                            }
                         </div>
-                        <hr/>
-                    }
-                }
+                        <div class="tab-pane" id="tab_stats_stars">
+                            <p>Number of movies by ratings</p>
+
+
+                            @{
+                                int[] stars = new int[10];
+                                for (var i = 0; i < 10; i++)
+                                {
+                                    stars[i] = 0;
+                                }
+                                foreach (var movies in Model.Movies)
+                                {
+                                    stars[int.Parse(Math.Floor(movies.Rating).ToString())]++;
+                                }
+                                string data = "{Stars: 0, Count: " + stars[0] + "}";
+                                for (var i = 1; i < 10; i++)
+                                {
+                                    data += ", {Stars: " + i + ", Count: " + stars[i] + "}";
+                                }
+                            }
+
+
+
+                            <script src="http://d3js.org/d3.v3.min.js"></script>
+                            <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+                            <script>
+
+                                var margin = { top: 40, right: 20, bottom: 30, left: 40 },
+                                    width = 960 - margin.left - margin.right,
+                                    height = 500 - margin.top - margin.bottom;
+
+                                var formatPercent = d3.format("1");
+
+                                var x = d3.scale.ordinal()
+                                    .rangeRoundBands([0, width], .1);
+
+                                var y = d3.scale.linear()
+                                    .range([height, 0]);
+
+                                var xAxis = d3.svg.axis()
+                                    .scale(x)
+                                    .orient("bottom");
+
+                                var yAxis = d3.svg.axis()
+                                    .scale(y)
+                                    .orient("left");
+
+                                var tip = d3.tip()
+                                  .attr('class', 'd3-tip')
+                                  .offset([-10, 0])
+                                  .html(function (d) {
+                                      return "<strong>Movies:</strong> <span style='color:red'>" + d.Count + "</span>";
+                                  })
+
+                                var svg = d3.select("#tab_stats_stars").append("svg")
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                  .append("g")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                                svg.call(tip);
+
+                                var data = [@data];
+
+                                x.domain(data.map(function (d) { return d.Stars; }));
+                                y.domain([0, d3.max(data, function (d) { return d.Count; })]);
+
+                                svg.append("g")
+                                    .attr("class", "x axis")
+                                    .attr("transform", "translate(0," + height + ")")
+                                    .call(xAxis);
+
+                                svg.append("g")
+                                    .attr("class", "y axis")
+                                    .call(yAxis)
+                                  .append("text")
+                                    .attr("transform", "rotate(-90)")
+                                    .attr("y", 6)
+                                    .attr("dy", ".71em")
+                                    .style("text-anchor", "end")
+                                    .text("Movies");
+
+                                svg.selectAll(".bar")
+                                    .data(data)
+                                  .enter().append("rect")
+                                    .attr("class", "bar")
+                                    .attr("x", function (d) { return x(d.Stars); })
+                                    .attr("width", x.rangeBand())
+                                    .attr("y", function (d) { return y(d.Count); })
+                                    .attr("height", function (d) { return height - y(d.Count); })
+                                    .on('mouseover', tip.show)
+                                    .on('mouseout', tip.hide)
+
+
+
+                                function type(d) {
+                                    d.Count = +d.Count;
+                                    return d;
+                                }
+
+                            </script>
+                        </div>
+                        <div class="tab-pane" id="tab_stats_calendar">
+                            <p>Number of movies by years</p>
+
+                            @{
+                                int age = DateTime.Now.Year - Model.DateOfBirth.Year;
+                                int[] years = new int[age];
+                                for (var i = 0; i < age; i++)
+                                {
+                                    years[i] = 0;
+                                }
+                                foreach (var movies in Model.Movies)
+                                {
+                                    years[movies.ReleaseDate.Year - Model.DateOfBirth.Year]++;
+                                }
+                                string data2 = "{Year: " + Model.DateOfBirth.Year + " , Count: " + years[0] + "}";
+                                for (var i = 1; i < age; i++)
+                                {
+                                    data2 += ", {Year: " + (Model.DateOfBirth.Year + i) + ", Count: " + years[i] + "}";
+                                }
+                            }
+
+                            <script>
+
+                                var margin = { top: 40, right: 20, bottom: 50, left: 40 },
+                                    width = 960 - margin.left - margin.right,
+                                    height = 500 - margin.top - margin.bottom;
+
+                                var formatPercent = d3.format("1");
+
+                                var x = d3.scale.ordinal()
+                                    .rangeRoundBands([0, width], .1);
+
+                                var y = d3.scale.linear()
+                                    .range([height, 0]);
+
+                                var xAxis = d3.svg.axis()
+                                    .scale(x)
+                                    .orient("bottom");
+
+                                var yAxis = d3.svg.axis()
+                                    .scale(y)
+                                    .orient("left")
+                                    .tickFormat(formatPercent);
+
+                                var tip = d3.tip()
+                                  .attr('class', 'd3-tip')
+                                  .offset([-10, 0])
+                                  .html(function (d) {
+                                      return "<strong>Movies:</strong> <span style='color:red'>" + d.Count + "</span>";
+                                  })
+
+                                var svg = d3.select("#tab_stats_calendar").append("svg")
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                  .append("g")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                                svg.call(tip);
+
+                                var data = [@data2];
+                                x.domain(data.map(function (d) { return d.Year; }));
+                                y.domain([0, d3.max(data, function (d) { return d.Count; })]);
+
+                                svg.append("g")
+                                    .attr("class", "x axis")
+                                    .attr("transform", "translate(0," + height + ")")
+                                    .call(xAxis).selectAll("text")
+     .style("text-anchor", "end")
+     .attr("dx", "-.8em")
+     .attr("dy", ".15em")
+     .attr("transform", "rotate(-65)");;
+
+                                svg.append("g")
+                                    .attr("class", "y axis")
+                                    .call(yAxis)
+                                  .append("text")
+                                    .attr("transform", "rotate(-90)")
+                                    .attr("y", 6)
+                                    .attr("dy", ".71em")
+                                    .style("text-anchor", "end")
+                                    .text("Movies");
+
+                                svg.selectAll(".bar")
+                                    .data(data)
+                                  .enter().append("rect")
+                                    .attr("class", "bar")
+                                    .attr("x", function (d) { return x(d.Year); })
+                                    .attr("width", x.rangeBand())
+                                    .attr("y", function (d) { return y(d.Count); })
+                                    .attr("height", function (d) { return height - y(d.Count); })
+                                    .on('mouseover', tip.show)
+                                    .on('mouseout', tip.hide)
+
+
+
+                                function type(d) {
+                                    d.Count = +d.Count;
+                                    return d;
+                                }
+
+                            </script>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
             </div>
+        </div>
     </div>
 </div>
