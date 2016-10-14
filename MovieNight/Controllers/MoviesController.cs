@@ -9,6 +9,12 @@ using System.Web.Mvc;
 using MovieNight.Models;
 using System.Net.Http;
 using System.Xml;
+using Newtonsoft.Json;
+using TMDbLib.Client;
+using TMDbLib.Objects.General;
+using TMDbLib.Objects.Movies;
+using TMDbLib.Objects.Search;
+
 
 namespace MovieNight.Controllers
 {
@@ -19,6 +25,69 @@ namespace MovieNight.Controllers
         // GET: Movies
         public ActionResult Index(string searchString, string movieGenre, string searchDirector, string orderBy)
         {
+            //// Connectiong to TMDB API
+            //TMDbClient client = new TMDbClient("e77a93ac7dab813a39327cfaa10938e8");
+                                   
+            //// Get the top rated movies
+            //TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> TopRatedMovies = client.GetMovieList(MovieListType.TopRated);
+            
+            //// Get the now playing movies
+            //TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> NowPlayingMovies = client.GetMovieList(MovieListType.NowPlaying);
+
+            //// Get the popular movies
+            //TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> PopularMovies = client.GetMovieList(MovieListType.Popular);
+
+            //// Get the upcoming movies
+            //TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> UpComingMovies = client.GetMovieList(MovieListType.Upcoming);
+
+            //string BaseImgURL = "https://image.tmdb.org/t/p/w300";
+
+            //// Goes over all of the now playing movies
+            //foreach (MovieResult currMovie in NowPlayingMovies.Results)
+            //{
+            //    //Title 
+            //    var title = currMovie.Title;
+
+            //    // Genre 
+            //    List<Genre> genreList = client.GetMovie(currMovie.Id).Genres;
+
+            //    string wow = string.Join(",", genreList.ToList());
+
+            //    string genre = "";
+            //    foreach (Genre currGenre in genreList)
+            //    {
+            //        genre += currGenre.Name + ", ";
+            //    }
+
+            //    // Trim trailing comma and white space
+            //    genre = genre.TrimEnd(' ').TrimEnd(',');
+
+            //    // Director
+            //    var director = client.GetMovieCredits(currMovie.Id).Crew.Select(crew => crew.Job == "Director");
+
+            //    // Plot
+            //    var plot = currMovie.Overview;
+
+            //    //Poster
+            //    var poster = BaseImgURL + currMovie.PosterPath;
+
+            //    //Rating
+            //    var rating = currMovie.VoteAverage;
+            //}
+
+            //// Find movie by title
+            //SearchContainer<SearchMovie> movieFindingNemo = client.SearchMovie("Finding Nemo");
+
+            //// Create SessionID for the user
+            //TMDbLib.Objects.Authentication.UserSession userSession = client.AuthenticationGetUserSession("aideslucas", "Aa123456");
+            //string sessionID = userSession.SessionId;
+            //client.SetSessionInformation(sessionID, TMDbLib.Objects.Authentication.SessionType.UserSession);
+
+            //----------------------------------------------
+            //----------------------------------------------
+            //----------------------------------------------
+
+
             // Set values received to keep the form withs its values
             ViewBag.searchString = searchString;
             ViewBag.selectedGenre = movieGenre;
@@ -121,7 +190,7 @@ namespace MovieNight.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
+            MovieNight.Models.Movie movie = db.Movies.Find(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -175,7 +244,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Title,ReleaseDate,Genre,Plot,DirectorID,Rating,Poster,Trailer")] Movie movie)
+        public ActionResult Create([Bind(Include = "ID,Title,ReleaseDate,Genre,Plot,DirectorID,Rating,Poster,Trailer")] MovieNight.Models.Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -195,7 +264,7 @@ namespace MovieNight.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
+            MovieNight.Models.Movie movie = db.Movies.Find(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -209,7 +278,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Title,ReleaseDate,Genre,Plot,DirectorID,Rating,Poster,Trailer")] Movie movie)
+        public ActionResult Edit([Bind(Include = "ID,Title,ReleaseDate,Genre,Plot,DirectorID,Rating,Poster,Trailer")] MovieNight.Models.Movie movie)
         {
             if (ModelState.IsValid)
             {
@@ -228,7 +297,7 @@ namespace MovieNight.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
+            MovieNight.Models.Movie movie = db.Movies.Find(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -241,7 +310,7 @@ namespace MovieNight.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = db.Movies.Find(id);
+            MovieNight.Models.Movie movie = db.Movies.Find(id);
             db.Movies.Remove(movie);
             db.SaveChanges();
             return RedirectToAction("Index");
