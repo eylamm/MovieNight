@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MovieNight.Models;
+using System.Net.Http;
+using System.Xml;
 
 namespace MovieNight.Controllers
 {
@@ -131,6 +133,40 @@ namespace MovieNight.Controllers
         public ActionResult Create()
         {
             ViewBag.DirectorID = new SelectList(db.Directors, "ID", "FirstName");
+            return View();
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> Search(string title)
+        {
+            string _address = "http://www.omdbapi.com/?s=" + title + "&type=movie&r=xml";
+            try
+            {
+                ViewBag.Movies = new List<string>();
+                HttpWebRequest request = WebRequest.Create(_address) as HttpWebRequest;
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(response.GetResponseStream());
+
+                XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
+                nsmgr.AddNamespace("rest", "http://schemas.microsoft.com/search/local/ws/rest/v1");
+
+                //Get all locations in the response and then extract the formatted address for each location
+                XmlNodeList moviesElement = xmlDoc.SelectNodes("//rest:result", nsmgr);
+                foreach (XmlNode movie in moviesElement)
+                {
+                    ViewBag.Movies.Add(movie.SelectSingleNode(".//rest:title", nsmgr).InnerText);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                Console.Read();
+                return null;
+            }
+            
             return View();
         }
 
