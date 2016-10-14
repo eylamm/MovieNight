@@ -15,7 +15,6 @@ namespace MovieNight.Controllers
         private MovieNightDB db = new MovieNightDB();
 
         // GET: Users
-        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             return View(db.Users.ToList());
