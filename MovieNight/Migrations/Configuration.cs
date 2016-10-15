@@ -22,9 +22,82 @@ namespace MovieNight.Migrations
         protected override void Seed(MovieNight.Models.MovieNightDB context)
         {
             //  This method will be called after migrating to the latest version
-            var frank = new Director { FirstName = "Frank", LastName = "Darabont", DateOfBirth = DateTime.Parse("January 28, 1959"), Gender = Gender.Male, Origin = "France", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BNjk0MTkxNzQwOF5BMl5BanBnXkFtZTcwODM5OTMwNA@@._V1_.jpg" };
-            var francis = new Director { FirstName = "Francis Ford", LastName = "Coppola", DateOfBirth = DateTime.Parse("April 7, 1939"), Gender = Gender.Male, Origin = "USA", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTM5NDU3OTgyNV5BMl5BanBnXkFtZTcwMzQxODA0NA@@._V1_SY1000_CR0,0,665,1000_AL_.jpg" };
-            var christ = new Director { FirstName = "Christopher", LastName = "Nolan", DateOfBirth = DateTime.Parse("July 30, 1970"), Gender = Gender.Male, Origin = "UK", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BNjE3NDQyOTYyMV5BMl5BanBnXkFtZTcwODcyODU2Mw@@._V1_.jpg" };
+
+            var frank = new Director { FirstName = "Frank", LastName = "Darabont", DateOfBirth = DateTime.Parse("1984-3-13"), Gender = Gender.Male, Origin = "France", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BNjk0MTkxNzQwOF5BMl5BanBnXkFtZTcwODM5OTMwNA@@._V1_.jpg" };
+
+            // TMDB API
+            // TMDB API
+            // TMDB API
+            // TMDB API
+
+            // Connectiong to TMDB API
+            TMDbClient client = new TMDbClient("e77a93ac7dab813a39327cfaa10938e8");
+
+            // Get the top rated movies
+            TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> TopRatedMovies = client.GetMovieList(MovieListType.TopRated);
+
+            // Get the now playing movies
+            TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> NowPlayingMovies = client.GetMovieList(MovieListType.NowPlaying);
+
+            // Get the popular movies
+            TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> PopularMovies = client.GetMovieList(MovieListType.Popular);
+
+            // Get the upcoming movies
+            TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> UpComingMovies = client.GetMovieList(MovieListType.Upcoming);
+
+            string BaseImgURL = "https://image.tmdb.org/t/p/w300";
+
+            // Goes over all of the now playing movies
+            foreach (MovieResult currMovie in NowPlayingMovies.Results)
+            {
+                // Get the genre list into one string 
+                List<Genre> genreList = client.GetMovie(currMovie.Id).Genres;
+
+                // The new string value for the genre list
+                string currMoviegenre = "";
+
+                // Goes over all of the genres and add them to the new string
+                foreach (Genre cuurGenre in genreList)
+                {
+                    // Add the current genre to new genre string
+                    currMoviegenre += cuurGenre.Name + ", ";
+                }
+
+                // Trim trailing comma and white space
+                currMoviegenre = currMoviegenre.TrimEnd(' ').TrimEnd(',');
+
+                // Create the new movie object
+                var NewMovie = new MovieNight.Models.Movie
+                {
+                    Title       = currMovie.Title,
+                    Genre       = currMoviegenre,
+                  //Director    = client.GetMovieCredits(currMovie.Id).Crew.Select(crew => crew.Job == "Director").ToString(),
+                    Director    = frank,
+                    Plot        = currMovie.Overview,
+                    Poster      = BaseImgURL + currMovie.PosterPath,
+                    Rating      = currMovie.VoteAverage,
+                    ReleaseDate = currMovie.ReleaseDate.Value.Date, 
+                };
+
+                context.Movies.AddOrUpdate(p => p.Title, NewMovie);
+                context.SaveChanges();
+
+                //var MoviesToDB = new List<MovieNight.Models.Movie>
+                //{
+                //   NewMovie
+                //};
+                //MoviesToDB.ForEach(s => context.Movies.AddOrUpdate(p => p.Title, s));
+                //context.SaveChanges();
+            }
+
+            // TMDB API
+            // TMDB API
+            // TMDB API
+            // TMDB API
+
+            
+            var francis = new Director { FirstName = "Francis Ford", LastName = "Coppola", DateOfBirth = DateTime.Parse("1984-3-13"), Gender = Gender.Male, Origin = "USA", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTM5NDU3OTgyNV5BMl5BanBnXkFtZTcwMzQxODA0NA@@._V1_SY1000_CR0,0,665,1000_AL_.jpg" };
+            var christ = new Director { FirstName = "Christopher", LastName = "Nolan", DateOfBirth = DateTime.Parse("1984-3-13"), Gender = Gender.Male, Origin = "UK", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BNjE3NDQyOTYyMV5BMl5BanBnXkFtZTcwODcyODU2Mw@@._V1_.jpg" };
 
             var directors = new List<Director>
             {
@@ -72,87 +145,6 @@ namespace MovieNight.Migrations
 
             reviews.ForEach(s => context.Reviews.AddOrUpdate(p => p.CriticName, s));
             context.SaveChanges();
-
-            var user = new User { Username = "lucas", Password = "Aa123456", Role = Role.SimpleUser };
-            var admin = new User { Username = "admin", Password = "admin", Role = Role.Admin };
-
-            var users = new List<User>
-                {
-                user, admin
-            };
-            users.ForEach(s => context.Users.AddOrUpdate(p => p.Username, s));
-            context.SaveChanges();
-
-
-
-
-
-            // TMDB API
-            // TMDB API
-            // TMDB API
-            // TMDB API
-
-            // Connectiong to TMDB API
-            TMDbClient client = new TMDbClient("e77a93ac7dab813a39327cfaa10938e8");
-
-            // Get the top rated movies
-            TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> TopRatedMovies = client.GetMovieList(MovieListType.TopRated);
-
-            // Get the now playing movies
-            TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> NowPlayingMovies = client.GetMovieList(MovieListType.NowPlaying);
-
-            // Get the popular movies
-            TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> PopularMovies = client.GetMovieList(MovieListType.Popular);
-
-            // Get the upcoming movies
-            TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> UpComingMovies = client.GetMovieList(MovieListType.Upcoming);
-
-            string BaseImgURL = "https://image.tmdb.org/t/p/w300";
-
-            // Goes over all of the now playing movies
-            foreach (MovieResult currMovie in NowPlayingMovies.Results)
-            {
-                // Get the genre list into one string 
-                List<Genre> genreList = client.GetMovie(currMovie.Id).Genres;
-
-                // The new string value for the genre list
-                string currMoviegenre = "";
-
-                // Goes over all of the genres and add them to the new string
-                foreach (Genre cuurGenre in genreList)
-                {
-                    // Add the current genre to new genre string
-                    currMoviegenre += cuurGenre.Name + ", ";
-                }
-
-                // Trim trailing comma and white space
-                currMoviegenre = currMoviegenre.TrimEnd(' ').TrimEnd(',');
-
-                // Create the new movie object
-                var NewMovie = new MovieNight.Models.Movie
-                {
-                    Title = currMovie.Title,
-                    Genre = currMoviegenre,
-                    //Director = client.GetMovieCredits(currMovie.Id).Crew.Select(crew => crew.Job == "Director").ToString(),
-                    Director = frank,
-                    Plot = currMovie.Overview,
-                    Poster = BaseImgURL + currMovie.PosterPath,
-                    Rating = currMovie.VoteAverage,
-                };
-
-                var MoviesToDB = new List<MovieNight.Models.Movie>
-                {
-                   NewMovie
-                };
-
-                MoviesToDB.ForEach(s => context.Movies.AddOrUpdate(p => p.Title, s));
-                context.SaveChanges();
-            }
-
-            // TMDB API
-            // TMDB API
-            // TMDB API
-            // TMDB API
         }
     }
 }
