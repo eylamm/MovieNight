@@ -4,6 +4,7 @@
     ViewBag.Title = Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <div>
     <div class="row">
         <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Poster" alt="@Model.Title" style="width:300px; height:300px;">
@@ -15,7 +16,7 @@
             <h4 class="pull-right">@Model.Rating <span class="glyphicon glyphicon-star"></span></h4>
             <br />
             <p>
-
+                <!-- Displays the movie genres for the selected movie-->
                 @foreach (var genre in Model.Genre.Split(','))
                 {
                     <button class="btn btn-sm btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
@@ -25,6 +26,40 @@
             <p><b>Director: </b>@Html.ActionLink(Model.Director.FirstName + " " + Model.Director.LastName, "Details", "Directors", new { id = Model.DirectorID }, null)</p>
         </div>
     </div>
+    
+    <!-- Displays the movie cast information from TMDB-->
+    <section class="top_billed" name="top_billed">
+        <h3>Top Billed Cast</h3>
+        <ol class="people">
+            @{
+                int counter = 0;
+
+                <!-- Going over six of the cast personals to display on the movie details page-->
+                foreach (var currCast in ViewBag.cast)
+                {
+                    <!-- Display a list of cast members, showing - person's name, charachter name and profile pic-->
+                    <li>
+                        <img src="@ViewBag.baseImageURL@currCast.ProfilePath" alt="@currCast.Name" onerror="this.src = 'http://mdepinet.org/wp-content/uploads/person-placeholder.jpg'" style="width:150px; height:150px;" class="profile lazyautosizes lazyloaded">
+                        <h4>@currCast.Name</h4>
+                        <h6><b>@currCast.Character</b></h6>
+                    </li>
+
+                    <!-- Increase the cast personals counter-->
+                    counter++;
+
+                    <!-- Display no more than six cast members-->
+                    if (counter > 5)
+                    {
+                        break;
+                    }
+                }
+            }
+        </ol>
+    
+    <!-- A link to the cast discription on TMDB itself-->
+    <p class="full_width button"><a class="button rounded" href="https://www.themoviedb.org/movie/@ViewBag.currMovieTMDBID@Model.Title.Replace(" ", string.Empty)/cast">See Full Cast &amp; Crew on TMDB</a></p>   
+
+    </section>
     <div class="row">
         <div>
             <h4 class="pull-right">@Model.Reviews.Count <span class="glyphicon glyphicon-comment"></span></h4>

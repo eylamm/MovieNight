@@ -76,7 +76,6 @@
                                 <h4 class="pull-right">@item.ReleaseDate.Year</h4>
                                 <br /><br />
                                 <p>
-                                    @item.Genre.TrimEnd()
                                     @foreach (var genre in item.Genre.Split(','))
                                     {
                                         <button class="btn btn-xs btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
