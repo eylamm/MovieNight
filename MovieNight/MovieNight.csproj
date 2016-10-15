@@ -212,9 +212,9 @@
     <Compile Include="Migrations\201610141427051_InitialCreate.Designer.cs">
       <DependentUpon>201610141427051_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610141614308_lucas.cs" />
-    <Compile Include="Migrations\201610141614308_lucas.Designer.cs">
-      <DependentUpon>201610141614308_lucas.cs</DependentUpon>
+    <Compile Include="Migrations\201610141903416_ititaial.cs" />
+    <Compile Include="Migrations\201610141903416_ititaial.Designer.cs">
+      <DependentUpon>201610141903416_ititaial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Director.cs" />
@@ -297,6 +297,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\App_LocalResources\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -310,8 +311,8 @@
     <EmbeddedResource Include="Migrations\201610141427051_InitialCreate.resx">
       <DependentUpon>201610141427051_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610141614308_lucas.resx">
-      <DependentUpon>201610141614308_lucas.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610141903416_ititaial.resx">
+      <DependentUpon>201610141903416_ititaial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

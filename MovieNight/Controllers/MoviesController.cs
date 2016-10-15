@@ -22,73 +22,12 @@ namespace MovieNight.Controllers
     {
         private MovieNightDB db = new MovieNightDB();
 
+        TMDbClient client = new TMDbClient("e77a93ac7dab813a39327cfaa10938e8");
+
         // GET: Movies
         public ActionResult Index(string searchString, string movieGenre, string searchDirector, string orderBy)
         {
-            //// Connectiong to TMDB API
-            //TMDbClient client = new TMDbClient("e77a93ac7dab813a39327cfaa10938e8");
-                                   
-            //// Get the top rated movies
-            //TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> TopRatedMovies = client.GetMovieList(MovieListType.TopRated);
-            
-            //// Get the now playing movies
-            //TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> NowPlayingMovies = client.GetMovieList(MovieListType.NowPlaying);
-
-            //// Get the popular movies
-            //TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> PopularMovies = client.GetMovieList(MovieListType.Popular);
-
-            //// Get the upcoming movies
-            //TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> UpComingMovies = client.GetMovieList(MovieListType.Upcoming);
-
-            //string BaseImgURL = "https://image.tmdb.org/t/p/w300";
-
-            //// Goes over all of the now playing movies
-            //foreach (MovieResult currMovie in NowPlayingMovies.Results)
-            //{
-            //    //Title 
-            //    var title = currMovie.Title;
-
-            //    // Genre 
-            //    List<Genre> genreList = client.GetMovie(currMovie.Id).Genres;
-
-            //    string wow = string.Join(",", genreList.ToList());
-
-            //    string genre = "";
-            //    foreach (Genre currGenre in genreList)
-            //    {
-            //        genre += currGenre.Name + ", ";
-            //    }
-
-            //    // Trim trailing comma and white space
-            //    genre = genre.TrimEnd(' ').TrimEnd(',');
-
-            //    // Director
-            //    var director = client.GetMovieCredits(currMovie.Id).Crew.Select(crew => crew.Job == "Director");
-
-            //    // Plot
-            //    var plot = currMovie.Overview;
-
-            //    //Poster
-            //    var poster = BaseImgURL + currMovie.PosterPath;
-
-            //    //Rating
-            //    var rating = currMovie.VoteAverage;
-            //}
-
-            //// Find movie by title
-            //SearchContainer<SearchMovie> movieFindingNemo = client.SearchMovie("Finding Nemo");
-
-            //// Create SessionID for the user
-            //TMDbLib.Objects.Authentication.UserSession userSession = client.AuthenticationGetUserSession("aideslucas", "Aa123456");
-            //string sessionID = userSession.SessionId;
-            //client.SetSessionInformation(sessionID, TMDbLib.Objects.Authentication.SessionType.UserSession);
-
-            //----------------------------------------------
-            //----------------------------------------------
-            //----------------------------------------------
-
-
-            // Set values received to keep the form withs its values
+           // Set values received to keep the form withs its values
             ViewBag.searchString = searchString;
             ViewBag.selectedGenre = movieGenre;
             ViewBag.searchDirector = searchDirector;
@@ -195,6 +134,25 @@ namespace MovieNight.Controllers
             {
                 return HttpNotFound();
             }
+
+            // Get the current movie id from TMDB
+            var currMovieID = client.SearchMovie(movie.Title).Results[0].Id;
+
+            // Get the current movie cast from TMDB
+            var currMoviecast = client.GetMovieCredits(currMovieID).Cast;
+
+            // Set the base image URL
+            string BaseImageURL = "https://image.tmdb.org/t/p/w132_and_h132_bestv2";
+
+            // Initalize html helper with cast info
+            ViewBag.Cast = currMoviecast;
+
+            // Initalize html helper with base image url
+            ViewBag.baseImageURL = BaseImageURL;
+
+            // Initalize html helper with TMDB ID of the movie
+            ViewBag.currMovieTMDBID = currMovieID;
+
             return View(movie);
         }
 
