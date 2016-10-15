@@ -21,6 +21,11 @@ namespace MovieNight.Migrations
 
         protected override void Seed(MovieNight.Models.MovieNightDB context)
         {
+            if (System.Diagnostics.Debugger.IsAttached == false)
+            {
+                System.Diagnostics.Debugger.Launch();
+            }
+
             //  This method will be called after migrating to the latest version
 
             var frank = new Director { FirstName = "Frank", LastName = "Darabont", DateOfBirth = DateTime.Parse("January 28, 1959"), Gender = Gender.Male, Origin = "France", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BNjk0MTkxNzQwOF5BMl5BanBnXkFtZTcwODM5OTMwNA@@._V1_.jpg" };
@@ -32,25 +37,14 @@ namespace MovieNight.Migrations
                 frank, francis, christ
             };
 
-            directors.ForEach(s => context.Directors.AddOrUpdate(p => p.FirstName, s));
+            directors.ForEach(s => context.Directors.AddOrUpdate(s));
             context.SaveChanges();
 
             var shawshank = new MovieNight.Models.Movie { Title = "The Shawshank Redemption", Genre = "Crime, Drama", Director = frank, Plot = "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.", Poster = "https://images-na.ssl-images-amazon.com/images/M/MV5BODU4MjU4NjIwNl5BMl5BanBnXkFtZTgwMDU2MjEyMDE@._V1_SY1000_CR0,0,672,1000_AL_.jpg", Rating = 9.3, ReleaseDate = DateTime.Parse("September 23, 1994") };
             var godfather = new MovieNight.Models.Movie { Title = "The Godfather", Genre = "Crime, Drama", Director = francis, Plot = "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.", Poster = "https://images-na.ssl-images-amazon.com/images/M/MV5BMmE4MjdiZjctMjU3Ni00ZTM5LWIxNGMtNjgzZjQ2Y2Y3ZTliXkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_UX182_CR0,0,182,268_AL_.jpg", Rating = 9.2, ReleaseDate = DateTime.Parse("March 15, 1972") };
             var godfather2 = new MovieNight.Models.Movie { Title = "The Godfather: Part II", Genre = "Crime, Drama", Director = francis, Plot = "The early life and career of Vito Corleone in 1920s New York is portrayed while his son, Michael, expands and tightens his grip on his crime syndicate stretching from Lake Tahoe, Nevada to pre-revolution 1958 Cuba.", Poster = "https://images-na.ssl-images-amazon.com/images/M/MV5BNDVjZjgxNTgtMGNhMC00YWU0LTg0YTQtNTkxNzBjMDBkNWYyXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_UY268_CR3,0,182,268_AL_.jpg", Rating = 9.0, ReleaseDate = DateTime.Parse("December 12, 1974") };
+            var batman = new MovieNight.Models.Movie { Title = "The Dark Knight", Genre = "Action, Crime, Drama", Director = christ, Plot = "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, the caped crusader must come to terms with one of the greatest psychological tests of his ability to fight injustice.", Poster = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_UX182_CR0,0,182,268_AL_.jpg", Rating = 9.0, ReleaseDate = DateTime.Parse("July 24, 2008") };
 
-            var batman = new MovieNight.Models.Movie
-            {
-                Title = "The Dark Knight",
-                Genre = "Action, Crime, Drama",
-                Director = christ,
-                Plot = "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham," +
-                                               "the caped crusader must come to terms with one of the greatest psychological tests" +
-                                               "of his ability to fight injustice.",
-                Poster = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_UX182_CR0,0,182,268_AL_.jpg",
-                Rating = 9.0,
-                ReleaseDate = DateTime.Parse("July 24, 2008")
-            };
             var movies = new List<MovieNight.Models.Movie>
             {
                 shawshank,
@@ -71,13 +65,13 @@ namespace MovieNight.Migrations
                 rev1,rev2,rev3
             };
 
-            reviews.ForEach(s => context.Reviews.AddOrUpdate(p => p.CriticName, s));
+            reviews.ForEach(s => context.Reviews.AddOrUpdate(p => p.ID, s));
             context.SaveChanges();
 
             var user = new User { Username = "user", Password = "user", Role = Role.SimpleUser };
             var admin = new User { Username = "admin", Password = "admin", Role = Role.Admin };
-            context.Users.AddOrUpdate(user);
-            context.Users.AddOrUpdate(admin);
+            context.Users.AddOrUpdate(p => p.ID, user);
+            context.Users.AddOrUpdate(p => p.ID, admin);
             context.SaveChanges();
 
             // TMDB API
@@ -102,6 +96,8 @@ namespace MovieNight.Migrations
 
             string BaseImgURL = "https://image.tmdb.org/t/p/w300";
 
+            var Addedmovies = new List<MovieNight.Models.Movie>();
+
             // Goes over all of the now playing movies
             foreach (MovieResult currMovie in NowPlayingMovies.Results)
             {
@@ -121,23 +117,34 @@ namespace MovieNight.Migrations
                 // Trim trailing comma and white space
                 currMoviegenre = currMoviegenre.TrimEnd(' ').TrimEnd(',');
 
+                // Set movie trailer base path
+                string MovieTralierBasePath = "https://www.youtube.com/embed/";
+
+                string currMovieTrailerPath = "";
+
+                if (client.GetMovie(currMovie.Id, MovieMethods.Videos).Videos.Results.Count() != 0)
+                {
+                    // Get the current movie video path
+                    currMovieTrailerPath = client.GetMovie(currMovie.Id, MovieMethods.Videos).Videos.Results[0].Key;
+                }
+
                 // Create the new movie object
                 var NewMovie = new MovieNight.Models.Movie
                 {
                     Title = currMovie.Title,
                     Genre = currMoviegenre,
                     //Director    = client.GetMovieCredits(currMovie.Id).Crew.Select(crew => crew.Job == "Director").ToString(),
-                    Director = frank,
-                    Plot = currMovie.Overview,
-                    Poster = BaseImgURL + currMovie.PosterPath,
-                    Rating = currMovie.VoteAverage,
+                    Director    = frank,
+                    Plot        = currMovie.Overview,
+                    Poster      = BaseImgURL + currMovie.PosterPath,
+                    Rating      = currMovie.VoteAverage,
                     ReleaseDate = currMovie.ReleaseDate.Value.Date,
+                    Trailer     = MovieTralierBasePath + currMovieTrailerPath
                 };
 
-                context.Movies.AddOrUpdate(p => p.Title, NewMovie);
+                context.Movies.Add(NewMovie);
                 context.SaveChanges();
             }
-
             // TMDB API
             // TMDB API
             // TMDB API

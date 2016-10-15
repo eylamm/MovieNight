@@ -15,7 +15,6 @@ using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
 
-
 namespace MovieNight.Controllers
 {
     public class MoviesController : Controller
@@ -27,14 +26,11 @@ namespace MovieNight.Controllers
         // GET: Movies
         public ActionResult Index(string searchString, string movieGenre, string searchDirector, string orderBy)
         {
-           // Set values received to keep the form withs its values
+            // Set values received to keep the form withs its values
             ViewBag.searchString = searchString;
             ViewBag.selectedGenre = movieGenre;
             ViewBag.searchDirector = searchDirector;
             ViewBag.orderBy = orderBy;
-
-            var video = client.GetMovie(123).Video;
-            var videolist = client.GetMovieVideos(3386);
 
             /*******************************/
             /****** Search by Director *****/
@@ -155,6 +151,9 @@ namespace MovieNight.Controllers
 
             // Initalize html helper with TMDB ID of the movie
             ViewBag.currMovieTMDBID = currMovieID;
+
+            // Get Morew movies like this one
+            ViewBag.moreLikeThis = client.GetMovieSimilar(currMovieID);
 
             return View(movie);
         }

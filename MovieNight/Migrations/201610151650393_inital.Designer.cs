@@ -7,13 +7,13 @@ namespace MovieNight.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Initaial : IMigrationMetadata
+    public sealed partial class inital : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Initaial));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(inital));
         
         string IMigrationMetadata.Id
         {
-            get { return "201610151611599_Initaial"; }
+            get { return "201610151650393_inital"; }
         }
         
         string IMigrationMetadata.Source

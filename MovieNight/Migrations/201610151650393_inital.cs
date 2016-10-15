@@ -3,7 +3,7 @@ namespace MovieNight.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initaial : DbMigration
+    public partial class inital : DbMigration
     {
         public override void Up()
         {

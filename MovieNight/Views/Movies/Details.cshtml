@@ -27,14 +27,18 @@
 
             <!-- Movie trailer-->
             <div>
-                <video width="400" controls>
-                    <source src="mov_bbb.mp4" type="video/mp4">
-                    <source src="mov_bbb.ogg" type="video/ogg">
-                    Your browser does not support HTML5 video.
-                </video>
+                <iframe width="530" height="345" src="@Model.Trailer" allowfullscreen="allowfullscreen"></iframe>
             </div>
         </div>
-    </div>
+
+<!-- More Like this movie!!!-->
+ <!--       <div class="col-md-9 col-sm-9 col-lg-9"> -->
+            <!-- Displays the movie genres for the selected movie-->
+            @*@foreach (var similar in ViewBag.moreLikeThis)
+            {
+                <span>similar.Title</span>
+            }*@
+<!--        </div> //-->
     
     <!-- Displays the movie cast information from TMDB-->
     <section class="top_billed" name="top_billed">
