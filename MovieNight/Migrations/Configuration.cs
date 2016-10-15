@@ -69,22 +69,25 @@ namespace MovieNight.Migrations
                 // Create the new movie object
                 var NewMovie = new MovieNight.Models.Movie
                 {
-                    Title    = currMovie.Title,
-                    Genre    = currMoviegenre,
-                  //Director = client.GetMovieCredits(currMovie.Id).Crew.Select(crew => crew.Job == "Director").ToString(),
-                    Director = frank,
-                    Plot     = currMovie.Overview,
-                    Poster   = BaseImgURL + currMovie.PosterPath,
-                    Rating   = currMovie.VoteAverage,
+                    Title       = currMovie.Title,
+                    Genre       = currMoviegenre,
+                  //Director    = client.GetMovieCredits(currMovie.Id).Crew.Select(crew => crew.Job == "Director").ToString(),
+                    Director    = frank,
+                    Plot        = currMovie.Overview,
+                    Poster      = BaseImgURL + currMovie.PosterPath,
+                    Rating      = currMovie.VoteAverage,
+                    ReleaseDate = currMovie.ReleaseDate.Value.Date, 
                 };
 
-                var MoviesToDB = new List<MovieNight.Models.Movie>
-                {
-                   NewMovie
-                };
-                
-                MoviesToDB.ForEach(s => context.Movies.AddOrUpdate(p => p.Title, s));
+                context.Movies.AddOrUpdate(p => p.Title, NewMovie);
                 context.SaveChanges();
+
+                //var MoviesToDB = new List<MovieNight.Models.Movie>
+                //{
+                //   NewMovie
+                //};
+                //MoviesToDB.ForEach(s => context.Movies.AddOrUpdate(p => p.Title, s));
+                //context.SaveChanges();
             }
 
             // TMDB API
