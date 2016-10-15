@@ -17,25 +17,7 @@ namespace MovieNight.Models
 
         [Required, Display(Name = "Password"), DataType(DataType.Password)]
         public string Password { get; set; }
-
-        [Display(Name = "First Name")]
-        public string FirstName { get; set; }
-
-        [Display(Name = "Last Name")]
-        public string LastName { get; set; }
-
-        [Display(Name = "Gender")]
-        public Gender Gender { get; set; }
-
-        [Display(Name = "Birthday"),
-         DataType(DataType.Date),
-         Column(TypeName = "Date"),
-         DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime DateOfBirth { get; set; }
-
-        [Display(Name = "Origin")]
-        public string Origin { get; set; }
-
+        
         [Required, Display(Name = "Role")]
         public Role Role { get; set; }
     }
