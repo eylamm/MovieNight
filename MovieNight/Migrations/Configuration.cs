@@ -24,9 +24,6 @@ namespace MovieNight.Migrations
             //  This method will be called after migrating to the latest version
 
             var frank = new Director { FirstName = "Frank", LastName = "Darabont", DateOfBirth = DateTime.Parse("January 28, 1959"), Gender = Gender.Male, Origin = "France", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BNjk0MTkxNzQwOF5BMl5BanBnXkFtZTcwODM5OTMwNA@@._V1_.jpg" };
-
-
-            
             var francis = new Director { FirstName = "Francis Ford", LastName = "Coppola", DateOfBirth = DateTime.Parse("April 7, 1939"), Gender = Gender.Male, Origin = "USA", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTM5NDU3OTgyNV5BMl5BanBnXkFtZTcwMzQxODA0NA@@._V1_SY1000_CR0,0,665,1000_AL_.jpg" };
             var christ = new Director { FirstName = "Christopher", LastName = "Nolan", DateOfBirth = DateTime.Parse("July 30, 1970"), Gender = Gender.Male, Origin = "UK", Picture = "https://images-na.ssl-images-amazon.com/images/M/MV5BNjE3NDQyOTYyMV5BMl5BanBnXkFtZTcwODcyODU2Mw@@._V1_.jpg" };
 
@@ -82,11 +79,6 @@ namespace MovieNight.Migrations
             context.Users.AddOrUpdate(user);
             context.Users.AddOrUpdate(admin);
             context.SaveChanges();
-
-
-
-
-
 
             // TMDB API
             // TMDB API
@@ -144,13 +136,6 @@ namespace MovieNight.Migrations
 
                 context.Movies.AddOrUpdate(p => p.Title, NewMovie);
                 context.SaveChanges();
-
-                //var MoviesToDB = new List<MovieNight.Models.Movie>
-                //{
-                //   NewMovie
-                //};
-                //MoviesToDB.ForEach(s => context.Movies.AddOrUpdate(p => p.Title, s));
-                //context.SaveChanges();
             }
 
             // TMDB API
