@@ -13,7 +13,7 @@ namespace MovieNight.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201610151516061_lucas"; }
+            get { return "201610151548022_lucas"; }
         }
         
         string IMigrationMetadata.Source
