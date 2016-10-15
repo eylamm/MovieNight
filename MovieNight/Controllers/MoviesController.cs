@@ -33,6 +33,9 @@ namespace MovieNight.Controllers
             ViewBag.searchDirector = searchDirector;
             ViewBag.orderBy = orderBy;
 
+            var video = client.GetMovie(123).Video;
+            var videolist = client.GetMovieVideos(3386);
+
             /*******************************/
             /****** Search by Director *****/
             /*******************************/
