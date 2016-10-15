@@ -13,12 +13,12 @@ namespace MovieNight.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201610141614308_lucas"; }
+            get { return "201610151548022_lucas"; }
         }
         
         string IMigrationMetadata.Source
         {
-            get { return Resources.GetString("Source"); }
+            get { return null; }
         }
         
         string IMigrationMetadata.Target

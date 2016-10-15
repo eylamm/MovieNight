@@ -208,9 +208,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201610151537560_inital1.cs" />
-    <Compile Include="Migrations\201610151537560_inital1.Designer.cs">
-      <DependentUpon>201610151537560_inital1.cs</DependentUpon>
+    <Compile Include="Migrations\201610151548022_lucas.cs" />
+    <Compile Include="Migrations\201610151548022_lucas.Designer.cs">
+      <DependentUpon>201610151548022_lucas.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Director.cs" />
@@ -285,11 +285,7 @@
     <Content Include="Views\Reviews\Index.cshtml" />
     <Content Include="Views\Reviews\GroupBy.cshtml" />
     <Content Include="Views\Movies\Search.cshtml" />
-    <Content Include="Views\Users\Create.cshtml" />
-    <Content Include="Views\Users\Delete.cshtml" />
-    <Content Include="Views\Users\Details.cshtml" />
-    <Content Include="Views\Users\Edit.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -304,8 +300,8 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201610151537560_inital1.resx">
-      <DependentUpon>201610151537560_inital1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610151548022_lucas.resx">
+      <DependentUpon>201610151548022_lucas.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

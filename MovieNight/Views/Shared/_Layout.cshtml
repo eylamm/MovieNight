@@ -32,13 +32,34 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav" style="width:100%">
                     <li>
-                        @Html.ActionLink("Movie Night", "Index", "Movies", null, new {@class="navbar-brand"})
+                        @Html.ActionLink("Movie Night", "Index", "Movies", null, new { @class = "navbar-brand" })
                     </li>
                     <li>
                         @Html.ActionLink("Directors", "Index", "Directors")
                     </li>
-                    <li class="pull-right">
-                        @Html.ActionLink("Manage", "Index", "Manage")
+                    <li class="dropdown pull-right">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manage <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (Session["user"] != null)
+                                    {
+                                        MovieNight.Models.User user = Session["user"] as MovieNight.Models.User;
+                                        if (user.Role == MovieNight.Models.Role.Admin)
+                                        {
+
+
+                                <li>@Html.ActionLink("Manage Movies", "Manage", "Movies")</li>
+                                <li>@Html.ActionLink("Manage Directors", "Manage", "Directors")</li>
+                                <li>@Html.ActionLink("Manage Reviews", "Manage", "Reviews")</li>
+                                <li class="divider"></li>
+                                }
+                                <li>Hello @user.Username</li>
+                                <li>@Html.ActionLink("Logout", "Logout", "Users")</li>
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Login", "LogIn", "Users")</li>
+                            }
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -70,7 +91,6 @@
 
     </div>
     <!-- /.container -->
-
     <!-- jQuery -->
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

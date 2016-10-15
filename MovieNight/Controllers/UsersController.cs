@@ -25,16 +25,30 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LogIn(string username, string password)
+        public ActionResult LogIn(string Username, string Password)
         {
+            User DBuser = db.Users.Where(u => u.Username == Username).FirstOrDefault();
+
+            if (DBuser == null)
+            {
+                ViewBag.User = null;
+            }
+            else if (DBuser.Password.Equals(Password))
+            {
+                Session["user"] = DBuser;
+                return RedirectToAction("Index", "Movies");
+            }
+            else
+            {
+                ViewBag.User = null;
+            }
             return View();
         }
-
-        // GET: Users/Delete/5
-        public ActionResult LogOut(int? id)
+        
+        public ActionResult LogOut()
         {
-            
-            return View();
+            Session["user"] = null;
+            return RedirectToAction("Index", "Movies");
         }
 
         protected override void Dispose(bool disposing)
