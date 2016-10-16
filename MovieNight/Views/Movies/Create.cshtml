@@ -5,88 +5,201 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script>
+    $(document).ready(function () {
+
+        $("#searchResult").hide();
+        $("#Title").on("change paste keyup keydown", function () {
+            $.post("/Movies/SearchApi",
+            {
+                query: $("#Title").val()
+            },
+            function (data, status) {
+                console.log(data);
+                console.log(status);
+                $("#searchResult").show();
+                $("#contact-list").empty();
+                $.each(data, function (i, item) {
+                    var li = $("<li> </li>").attr("class", "list-group-item searchResult").attr("id", data[i].Id).attr("name", data[i].Id);
+                    var imgDiv = $("<div></div>").attr("class", "col-xs-12 col-sm-3").attr("id", data[i].Id).attr("name", data[i].Id);
+                    var imgtag = $("<img />").attr("src", "https://image.tmdb.org/t/p/w300" + data[i].PosterPath).attr("alt", data[i].Title).attr("class", "img-responsive img-circle").attr("id", data[i].Id).attr("name", data[i].Id);
+                    var details = $("<div></div>").attr("class", "col-xs-12 col-sm-9").attr("id", data[i].Id).attr("name", data[i].Id);
+                    var span = $("<span></span>").attr("class", "name").html(data[i].Title).attr("id", data[i].Id).attr("name", data[i].Id);
+                    var br = $("<br />").attr("id", data[i].Id).attr("name", data[i].Id);
+
+                    var myDate = new Date(data[i].ReleaseDate.match(/\d+/)[0] * 1);
+                    var releaseDate = "" + myDate.getFullYear() + "-" + ("0" + myDate.getMonth()).slice(-2) + "-" + ("0" + myDate.getDay()).slice(-2);
+
+                    var release = $("<span></span>").attr("class", "releaseDate").html(releaseDate).attr("id", data[i].Id).attr("name", data[i].Id);
+                    var clearfix = $("<div></div>").attr("class", "clearfix");
+                    details.append(span, br, release);
+                    imgDiv.append(imgtag);
+                    li.append(imgDiv, details, clearfix);
+                    $("#contact-list").append(li);
+                });
+            });
+        });
+
+        $("#searchResult").click(function (event) {
+            $.post("/Movies/GetDetailsFromApi",
+                {
+                    id: event.target.id
+                },
+                function (data, status) {
+                    console.log(data);
+                    if (data.Homepage == "noDirector")
+                    {
+                        
+                        if (confirm('This Movie is directed by ' + data.ImdbId + ' who is not in the database.\nwould you like to add him automaticaly?')) {
+                            $.post("/Directors/AddDirectorAPI",
+                            {
+                                id: data.VoteCount
+                            },
+                            function (data, status) {
+
+                                alert('The director ' + data.Name + ' was added successfully');
+                                var opt = $("<option> </option>").attr("value", data.ID).html(data.Name);
+                                $("#DirectorID").append(opt);
+                                $("#DirectorID").val(data.ID);
+                            });
+                        };
+                    }
+                    else
+                    {
+                        $("#DirectorID").val(data.Homepage);
+                    }
+                    $("#Title").val(data.Title);
+                    var myDate = new Date(data.ReleaseDate.match(/\d+/)[0] * 1);
+                    var releaseDate = "" + myDate.getFullYear() + "-" + ("0" + myDate.getMonth()).slice(-2) + "-" + ("0" + myDate.getDay()).slice(-2);
+                    $("#ReleaseDate").val(releaseDate);
+                    $("#Poster").val("https://image.tmdb.org/t/p/w300" + data.PosterPath);
+                    $("#posterprev").attr("src", "https://image.tmdb.org/t/p/w300" + data.PosterPath);
+                    var genres = "";
+                    $.each(data.Genres, function (i, gen) {
+                        genres += data.Genres[i].Name + ", ";
+                    });
+                    genres = genres.substr(0, genres.length - 2);
+                    $("#Genre").val(genres);
+                    $("#Plot").val(data.Overview);
+                    $("#Rating").val(data.VoteAverage);
+                });
+        });
+
+        $("#Picture").on("change paste keyup", function () {
+            $("#prev").attr("src", $("#Picture").val());
+        });
+    });
+</script>
+
 <h2>Create</h2>
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Movie</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-            </div>
-        </div>
+<div class="row">
+    <div class="col-sm-6">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReleaseDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ReleaseDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
+            <div class="form-horizontal">
+                <h4>Movie</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Genre, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Genre, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Genre, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReleaseDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ReleaseDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Plot, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Plot, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Plot, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Genre, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Genre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Genre, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DirectorID, "DirectorID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("DirectorID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DirectorID, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Plot, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Plot, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Plot, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Rating, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Rating, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Rating, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DirectorID, "DirectorID", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("DirectorID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DirectorID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Poster, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Poster, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Poster, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Rating, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Rating, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Rating, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Trailer, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Trailer, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Trailer, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Poster, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Poster, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Poster, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <div class="form-group">
+                    <label class="control-label col-md-2"> Poster Preview</label>
+                    <div class="col-md-10">
+                        <img id="posterprev" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Trailer, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Trailer, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Trailer, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Trailer Preview</label>
+                    <div class="col-md-10">
+                        <video id="trailerprev" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Create" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div id="searchResult">
+        <div class="col-sm-6">
+            <h4>WebAPI Search results (click the director you want to get his info):</h4>
+            <hr />
+            <div class="panel panel-default">
+                <ul class="list-group" id="contact-list"></ul>
             </div>
         </div>
     </div>
-}
-
+</div>
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>

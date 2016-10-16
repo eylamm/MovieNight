@@ -107,6 +107,21 @@ namespace MovieNight.Controllers
             return this.Json(client.GetPerson(id));
         }
 
+        public ActionResult AddDirectorAPI(int id)
+        {
+            TMDbLib.Objects.People.Person director = client.GetPerson(id);
+            Director added = db.Directors.Add(new Director
+            {
+                Name = director.Name,
+                Gender = Gender.Male,
+                DateOfBirth = (director.Birthday == null ? DateTime.Parse("January 1, 1900") : (DateTime)director.Birthday),
+                Origin = (director.PlaceOfBirth == "" ? "Unknown" : director.PlaceOfBirth.Split(',').Last()),
+                Picture = "https://image.tmdb.org/t/p/w300" + director.ProfilePath
+            });
+            db.SaveChanges();
+            return this.Json(added);
+        }
+
         // GET: Directors/Create
         public ActionResult Create()
         {
@@ -118,7 +133,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,FirstName,LastName,Gender,DateOfBirth,Origin,Picture")] Director director)
+        public ActionResult Create([Bind(Include = "ID,Name,Gender,DateOfBirth,Origin,Picture")] Director director)
         {
             if (ModelState.IsValid)
             {
@@ -150,7 +165,7 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,FirstName,LastName,Gender,DateOfBirth,Origin,Picture")] Director director)
+        public ActionResult Edit([Bind(Include = "ID,Name,Gender,DateOfBirth,Origin,Picture")] Director director)
         {
             if (ModelState.IsValid)
             {

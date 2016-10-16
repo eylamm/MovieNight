@@ -127,6 +127,32 @@ namespace MovieNight.Controllers
             return View(db.Movies.ToList());
         }
 
+        public ActionResult SearchApi(string query)
+        {
+            return this.Json(client.SearchMovie(query).Results);
+        }
+
+        public ActionResult GetDetailsFromApi(int id)
+        {
+            TMDbLib.Objects.Movies.Movie result = client.GetMovie(id);
+            Crew Director = client.GetMovieCredits(id).Crew.Where(crew => crew.Job == "Director").FirstOrDefault();
+
+            result.Homepage = "";
+            result.ImdbId = Director.Name;
+            result.VoteCount = Director.Id;
+            Director dbDir = db.Directors.Where(d => d.Name.ToLower().Equals(Director.Name.ToLower())).FirstOrDefault();
+            if (dbDir == null)
+            {
+                result.Homepage = "noDirector";
+            }
+            else
+            {
+                result.Homepage = dbDir.ID.ToString();
+            }
+            
+            return this.Json(result);
+        }
+
         // GET: Movies/Details/5
         public ActionResult Details(int? id)
         {
@@ -167,7 +193,7 @@ namespace MovieNight.Controllers
         // GET: Movies/Create
         public ActionResult Create()
         {
-            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "FirstName");
+            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "Name");
             return View();
         }
 
@@ -219,7 +245,7 @@ namespace MovieNight.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "FirstName", movie.DirectorID);
+            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "Name", movie.DirectorID);
             return View(movie);
         }
 
@@ -235,7 +261,7 @@ namespace MovieNight.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "FirstName", movie.DirectorID);
+            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "Name", movie.DirectorID);
             return View(movie);
         }
 
@@ -252,7 +278,7 @@ namespace MovieNight.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "FirstName", movie.DirectorID);
+            ViewBag.DirectorID = new SelectList(db.Directors, "ID", "Name", movie.DirectorID);
             return View(movie);
         }
 

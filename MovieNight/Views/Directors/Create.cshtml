@@ -11,8 +11,7 @@
     $(document).ready(function () {
 
         $("#searchResult").hide();
-        $("#Name").on("change paste keyup", function () {
-
+        $("#Name").on("change paste keyup keydown", function () {
             $.post("/Directors/SearchApi",
             {
                 query: $("#Name").val()
@@ -21,6 +20,7 @@
                 console.log(data);
                 console.log(status);
                 $("#searchResult").show();
+                $("#contact-list").empty();
                 $.each(data, function (i, item) {
                     var li = $("<li> </li>").attr("class", "list-group-item searchResult").attr("id", data[i].Id).attr("name", data[i].Id);
                     var imgDiv = $("<div></div>").attr("class", "col-xs-12 col-sm-3").attr("id", data[i].Id).attr("name", data[i].Id);
@@ -49,6 +49,7 @@
                 },
                 function (data, status) {
                     console.log(data);
+                    $("#Name").val(data.Name);
                     var myDate = new Date(data.Birthday.match(/\d+/)[0] * 1);
                     var birthdate = "" + myDate.getFullYear() + "-" + ("0"+myDate.getMonth()).slice(-2) + "-" + ("0"+myDate.getDay()).slice(-2);
                     $("#DateOfBirth").val(birthdate);
@@ -65,6 +66,8 @@
     });
 </script>
 
+<div class="row">
+    <div class="col-sm-6">
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -78,14 +81,6 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="row" id="searchResult">
-            <div class="col-xs-12 col-sm-offset-3 col-sm-6">
-                <div class="panel panel-default">
-                    <ul class="list-group" id="contact-list"></ul>
-                </div>
             </div>
         </div>
 
@@ -135,7 +130,17 @@
         </div>
     </div>
 }
-
+        </div>
+    <div id="searchResult">
+        <div class="col-sm-6">
+            <h4>WebAPI Search results (click the director you want to get his info):</h4>
+            <hr />
+            <div class="panel panel-default">
+                <ul class="list-group" id="contact-list"></ul>
+            </div>
+        </div>
+    </div>
+</div>
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
