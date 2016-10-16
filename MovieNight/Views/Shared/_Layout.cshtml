@@ -10,7 +10,8 @@
     <meta name="author" content="">
 
     <title>Blog Home - Start Bootstrap Template</title>
-
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -92,8 +93,7 @@
     </div>
     <!-- /.container -->
     <!-- jQuery -->
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+   
     @RenderSection("scripts", required: false)
 
 </body>

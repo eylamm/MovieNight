@@ -174,7 +174,7 @@
                             <p>Number of movies by years</p>
 
                             @{
-                                int age = DateTime.Now.Year - Model.DateOfBirth.Year;
+                                int age = DateTime.Now.Year - Model.DateOfBirth.Year + 1;
                                 int[] years = new int[age];
                                 for (var i = 0; i < age; i++)
                                 {

@@ -15,7 +15,7 @@ namespace MovieNight.Controllers
         private MovieNightDB db = new MovieNightDB();
 
         // GET: Reviews
-        public ActionResult Index(string criticName, string reviewedMovie, string reviewContent, string groupByMovie)
+        public ActionResult Manage(string criticName, string reviewedMovie, string reviewContent, string groupByMovie)
         {
             /********************************************/
             /****** Search by Content or CriticName *****/

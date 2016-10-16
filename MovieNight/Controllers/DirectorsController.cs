@@ -7,12 +7,15 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MovieNight.Models;
+using TMDbLib.Client;
+using TMDbLib.Objects.Search;
 
 namespace MovieNight.Controllers
 {
     public class DirectorsController : Controller
     {
         private MovieNightDB db = new MovieNightDB();
+        TMDbClient client = new TMDbClient("e77a93ac7dab813a39327cfaa10938e8");
 
         // GET: Directors
         public ActionResult Index(string directorName, string directorGender, string directorOrigin)
@@ -92,6 +95,16 @@ namespace MovieNight.Controllers
                 return HttpNotFound();
             }
             return View(director);
+        }
+
+        public ActionResult SearchApi(string query)
+        {
+            return this.Json(client.SearchPerson(query).Results);
+        }
+
+        public ActionResult GetDetailsFromApi(int id)
+        {
+            return this.Json(client.GetPerson(id));
         }
 
         // GET: Directors/Create

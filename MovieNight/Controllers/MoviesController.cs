@@ -121,6 +121,12 @@ namespace MovieNight.Controllers
             return View(MoviesQuery.Include(s => s.Director).Include(s => s.Reviews));
         }
 
+        // GET: Movies
+        public ActionResult Manage()
+        {
+            return View(db.Movies.ToList());
+        }
+
         // GET: Movies/Details/5
         public ActionResult Details(int? id)
         {

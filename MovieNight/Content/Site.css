@@ -95,3 +95,8 @@ footer {
   top: 100%;
   left: 0;
 }
+
+.name {
+    font-size: 1.7em;
+    font-weight: 700;
+}
