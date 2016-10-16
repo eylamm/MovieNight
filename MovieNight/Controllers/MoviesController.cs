@@ -99,7 +99,7 @@ namespace MovieNight.Controllers
             if (!String.IsNullOrEmpty(searchDirector))
             {
                 // Select the directors with the wanted string in their names
-                DirectorsQry = DirectorsQry.Where(d => d.FirstName.Contains(searchDirector) || d.LastName.Contains(searchDirector));
+                DirectorsQry = DirectorsQry.Where(d => d.Name.Contains(searchDirector));
 
                 // Select all the movies with the wanted director ID
                 MoviesQuery = MoviesQuery.Where(movie => DirectorsQry.Select(director => director.ID).Contains(movie.DirectorID));

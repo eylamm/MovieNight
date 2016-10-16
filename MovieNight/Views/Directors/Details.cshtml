@@ -1,17 +1,15 @@
 ﻿@model MovieNight.Models.Director
 
 @{
-    ViewBag.Title = Model.FirstName + " " + Model.LastName;
+    ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div>
     <div class="row">
-        <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Picture" alt="@Model.FirstName @Model.LastName" style="width:300px; height:300px;">
+        <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Picture" alt="@Model.Name" style="width:300px; height:300px;">
         <div class="col-md-6 col-sm-6 col-lg-6">
-            <h1>@Model.FirstName @Model.LastName</h1>
-            <p><b>First Name: </b>@Model.FirstName</p>
-            <p><b>Last Name: </b>@Model.LastName</p>
+            <h1>@Model.Name</h1>
             <p><b>Origin: </b>@Model.Origin</p>
             <p><b>Gender: </b>@Model.Gender.ToString()</p>
             <p><b>BirthDay: </b>@Model.DateOfBirth.ToShortDateString()</p>

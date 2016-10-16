@@ -72,7 +72,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <h3>@Html.ActionLink(item.FirstName + " " + item.LastName, "Details", new { id = item.ID })</h3>
+                            <h3>@Html.ActionLink(item.Name, "Details", new { id = item.ID })</h3>
                             <h6>Origin: @item.Origin</h6>
                             <h6>Gender: @item.Gender.ToString()</h6>
                             <h6>BirthDay: @item.DateOfBirth.ToShortDateString()</h6>

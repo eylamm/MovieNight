@@ -61,7 +61,7 @@ namespace MovieNight.Controllers
             if (!String.IsNullOrEmpty(directorName))
             {
                 // Select all the directors with the specified string in their name
-                DirectorsQry = DirectorsQry.Where(director => director.FirstName.Contains(directorName) || director.LastName.Contains(directorName));
+                DirectorsQry = DirectorsQry.Where(director => director.Name.Contains(directorName));
             }
 
             // Check the wanted gender to search by

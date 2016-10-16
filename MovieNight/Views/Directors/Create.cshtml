@@ -11,11 +11,11 @@
     $(document).ready(function () {
 
         $("#searchResult").hide();
-        $("#searchWeb").click(function (event) {
+        $("#Name").on("change paste keyup", function () {
 
             $.post("/Directors/SearchApi",
             {
-                query: $("#FirstName").val() + " " + $("#LastName").val()
+                query: $("#Name").val()
             },
             function (data, status) {
                 console.log(data);
@@ -74,23 +74,11 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <button id="searchWeb" name="searchWeb" value="Search Web" type="button"> Searcg Web </button>
         </div>
 
         <div class="row" id="searchResult">

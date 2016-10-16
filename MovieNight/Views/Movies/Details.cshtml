@@ -25,7 +25,7 @@
                 }
             </p>
             <p><b>Plot: </b>@Model.Plot</p>
-            <p><b>Director: </b>@Html.ActionLink(Model.Director.FirstName + " " + Model.Director.LastName, "Details", "Directors", new { id = Model.DirectorID }, null)</p>
+            <p><b>Director: </b>@Html.ActionLink(Model.Director.Name, "Details", "Directors", new { id = Model.DirectorID }, null)</p>
 
             <!-- Movie trailer-->
             <div>

@@ -12,12 +12,9 @@ namespace MovieNight.Models
         [Key, Display(Name = "Director ID")]
         public int ID { get; set; }
 
-        [Required, Display(Name = "First Name")]
-        public string FirstName { get; set; }
-
-        [Required, Display(Name = "Last Name")]
-        public string LastName { get; set; }
-
+        [Required, Display(Name = "Name")]
+        public string Name { get; set; }
+        
         [Required, Display(Name = "Gender")]
         public Gender Gender { get; set; }
 
