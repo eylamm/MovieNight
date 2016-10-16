@@ -7,7 +7,9 @@
 
 <div>
     <div class="row">
-        <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Poster" alt="@Model.Title" style="width:300px; height:300px;">
+        <div name="Image">
+            <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Poster" alt="@Model.Title" style="width:300px; height:450px; margin-top:20px;">
+        </div>
         <div class="col-md-6 col-sm-6 col-lg-6">
             <h1 class="pull-left">@Model.Title</h1>
             <br />
@@ -30,16 +32,35 @@
                 <iframe width="530" height="345" src="@Model.Trailer" allowfullscreen="allowfullscreen"></iframe>
             </div>
         </div>
-
-<!-- More Like this movie!!!-->
- <!--       <div class="col-md-9 col-sm-9 col-lg-9"> -->
-            <!-- Displays the movie genres for the selected movie-->
-            @*@foreach (var similar in ViewBag.moreLikeThis)
-            {
-                <span>similar.Title</span>
-            }*@
-<!--        </div> //-->
-    
+        
+        <!--more like this-->
+        @{
+            int count = 0;
+            <h3>More Like This:</h3>
+            <center>
+                <ol style="list-style:none; margin-right:0px;">
+                    <!-- Displays the 4 similar movies to this one-->
+                    @foreach (var similar in ViewBag.moreLikeThis.Results)
+                    {
+                        if (count < 3)
+                        {
+                            string MoviePoster = "https://image.tmdb.org/t/p/w250_and_h141_bestv2" + @similar.PosterPath;
+                            <li style="text-align:right; padding-top:0px;">
+                                <h5><b>@similar.Title (<span class="glyphicon glyphicon-star"><b>@similar.VoteAverage</b></span>)</b></h5>
+                                <img class="col-md-3 col-sm-3 col-lg-3" src=@MoviePoster alt=@similar.Title>
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                            </li>
+                        }
+                        count++;
+                    }
+                </ol>
+            </center>
+        }
+</div>
     <!-- Displays the movie cast information from TMDB-->
     <section class="top_billed" name="top_billed">
         <h3>Top Billed Cast</h3>
