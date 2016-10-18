@@ -82,11 +82,9 @@
                     $("#Genre").val(genres);
                     $("#Plot").val(data.Overview);
                     $("#Rating").val(data.VoteAverage);
+                    $("#Trailer").val("https://www.youtube.com/embed/" + data.Videos.Results[0].Key)
+                    $("#trailerprev").attr("src", "https://www.youtube.com/embed/" + data.Videos.Results[0].Key);
                 });
-        });
-
-        $("#Picture").on("change paste keyup", function () {
-            $("#prev").attr("src", $("#Picture").val());
         });
     });
 </script>
@@ -177,7 +175,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">Trailer Preview</label>
                     <div class="col-md-10">
-                        <video id="trailerprev" />
+                        <iframe id="trailerprev" style="width:400px; height:250px;"></iframe>
                     </div>
                 </div>
 
