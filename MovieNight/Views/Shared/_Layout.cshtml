@@ -53,12 +53,13 @@
                                 <li>@Html.ActionLink("Manage Reviews", "Manage", "Reviews")</li>
                                 <li class="divider"></li>
                                 }
-                                <li>Hello @user.Username</li>
+                                <li><a>Hello @user.Username</a></li>
                                 <li>@Html.ActionLink("Logout", "Logout", "Users")</li>
+
                             }
                             else
                             {
-                                <li>@Html.ActionLink("Login", "LogIn", "Users")</li>
+                                <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
                             }
                         </ul>
                     </li>
@@ -68,6 +69,22 @@
         </div>
         <!-- /.container -->
     </nav>
+
+    <!-- Login -->
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="loginmodal-container">
+                <h1>Login to Your Account</h1><br>
+                <form method="post" action="/Users/Login">
+                    @Html.AntiForgeryToken()
+                    <input type="text" name="Username" id="Username" placeholder="Username">
+                    <input type="password" name="Password" id="Password" placeholder="Password">
+                    <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /Login -->
 
     <!-- Page Content -->
     <div class="container">
