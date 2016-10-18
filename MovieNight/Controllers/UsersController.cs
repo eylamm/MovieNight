@@ -19,26 +19,38 @@ namespace MovieNight.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LogIn(string Username, string Password)
+        public ActionResult LogIn(string Username, string Password, string fromURI)
         {
             User DBuser = db.Users.Where(u => u.Username == Username).FirstOrDefault();
 
             if (DBuser == null)
             {
-                ViewBag.User = null;
+                ModelState.AddModelError("", "Username does not exists");
             }
             else if (DBuser.Password.Equals(Password))
             {
                 Session["user"] = DBuser;
+                if (fromURI != null)
+                {
+                    return Redirect(fromURI);
+                }
+
                 return RedirectToAction("Index", "Movies");
             }
             else
             {
-                ViewBag.User = null;
+                ModelState.AddModelError("", "Username and password do not match");
             }
+
             return View();
         }
-        
+
+        public ActionResult AccessDenied()
+        {
+            ModelState.AddModelError("", "Insuficient permissions. Please log in with an Admin user");
+            return View("LogIn");
+        }
+
         public ActionResult LogOut()
         {
             Session["user"] = null;

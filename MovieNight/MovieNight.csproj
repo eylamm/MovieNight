@@ -286,9 +286,10 @@
     <Content Include="Views\Reviews\Manage.cshtml" />
     <Content Include="Views\Reviews\GroupBy.cshtml" />
     <Content Include="Views\Movies\Search.cshtml" />
-    <Content Include="Views\Users\Login.cshtml" />
     <Content Include="Views\Movies\Manage.cshtml" />
     <Content Include="Views\Directors\Manage.cshtml" />
+    <Content Include="Views\Reviews\Index.cshtml" />
+    <Content Include="Views\Users\LogIn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

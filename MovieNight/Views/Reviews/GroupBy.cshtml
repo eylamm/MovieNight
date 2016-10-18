@@ -1,38 +1,17 @@
 ﻿@model IEnumerable<MovieNight.Models.RenderView>
 
     @{
-        ViewBag.Title = "GroupBy";
+        ViewBag.Title = "Reviews per Movie";
         Layout = "~/Views/Shared/_Layout.cshtml";
     }
 
-    <h2>GroupBy</h2>
+    <h2>Number of Reviews for each Movie</h2>
     <p>
-        @*@Html.ActionLink("Create New", "Create")*@
-
-        <!-- Set a new html form, wich will be submmited using get method, so that the search parameters are visible in the url -->
-        @using (Html.BeginForm("Manage", "Reviews", FormMethod.Get))
-        {
-        <p>
-            <!-- Search a review based on it's reviewer-->
-            Critic Name: @Html.TextBox("criticName")
-
-            <!-- Search a review based on it's movie-->
-            Movie: @Html.TextBox("reviewedMovie")
-
-            <!-- Search a review based on it's content-->
-            Content: @Html.TextBox("reviewContent")
-
-            <!-- Submit the search form data-->
-            <input type="submit" value="Filter" />
-        </p>
-        }
-
-        @using (Html.BeginForm("GroupBy", "Reviews", FormMethod.Get))
+        @using (Html.BeginForm("Index", "Reviews", FormMethod.Get))
         {
             <p>
                 <!--Search all of the -->
-                Or See all Reivews for: @Html.DropDownList("groupByMovie", "All")
-                <input type="submit" value="Go" />
+                See all reviews <input type="submit" value="Go!" />
             </p>
         }
         </p>

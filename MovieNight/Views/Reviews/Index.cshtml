@@ -1,17 +1,15 @@
 ﻿@model IEnumerable<MovieNight.Models.Review>
 
 @{
-    ViewBag.Title = "Manage Reviews";
+    ViewBag.Title = "Reviews";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Reviews</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
-
     <!-- Set a new html form, wich will be submmited using get method, so that the search parameters are visible in the url -->
-    @using (Html.BeginForm("Index", "Reviews", FormMethod.Get))
+    @using (Html.BeginForm())
     {
         <p>
             <!-- Search a review based on it's reviewer-->
@@ -25,6 +23,14 @@
 
             <!-- Submit the search form data-->
             <input type="submit" value="Filter" />
+        </p>
+    }
+
+    @using (Html.BeginForm("GroupBy", "Reviews", FormMethod.Get))
+    {
+        <p>
+            <!--Search all of the -->
+            See number of reviews for each movie <input type="submit" value="Go!" />
         </p>
     }
 </p>
@@ -42,7 +48,6 @@
         <th>
             @Html.DisplayNameFor(model => model.Content)
         </th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model) {
@@ -58,11 +63,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Content)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
         </td>
     </tr>
 }

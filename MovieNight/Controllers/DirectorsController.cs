@@ -82,6 +82,18 @@ namespace MovieNight.Controllers
             return View(DirectorsQry.Include(s => s.Movies));
         }
 
+        // GET: Directors
+        public ActionResult Manage()
+        {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
+            // Return the directors found
+            return View(db.Directors.Include(s => s.Movies));
+        }
+
         // GET: Directors/Details/5
         public ActionResult Details(int? id)
         {
@@ -99,16 +111,31 @@ namespace MovieNight.Controllers
 
         public ActionResult SearchApi(string query)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             return this.Json(client.SearchPerson(query).Results);
         }
 
         public ActionResult GetDetailsFromApi(int id)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             return this.Json(client.GetPerson(id));
         }
 
         public ActionResult AddDirectorAPI(int id)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             TMDbLib.Objects.People.Person director = client.GetPerson(id);
             Director added = db.Directors.Add(new Director
             {
@@ -125,6 +152,11 @@ namespace MovieNight.Controllers
         // GET: Directors/Create
         public ActionResult Create()
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             return View();
         }
 
@@ -135,11 +167,16 @@ namespace MovieNight.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Name,Gender,DateOfBirth,Origin,Picture")] Director director)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             if (ModelState.IsValid)
             {
                 db.Directors.Add(director);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Manage");
             }
 
             return View(director);
@@ -148,6 +185,11 @@ namespace MovieNight.Controllers
         // GET: Directors/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -167,11 +209,16 @@ namespace MovieNight.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Name,Gender,DateOfBirth,Origin,Picture")] Director director)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             if (ModelState.IsValid)
             {
                 db.Entry(director).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Manage");
             }
             return View(director);
         }
@@ -179,6 +226,11 @@ namespace MovieNight.Controllers
         // GET: Directors/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -196,10 +248,15 @@ namespace MovieNight.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             Director director = db.Directors.Find(id);
             db.Directors.Remove(director);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Manage");
         }
 
         protected override void Dispose(bool disposing)
