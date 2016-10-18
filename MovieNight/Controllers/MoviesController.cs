@@ -26,6 +26,9 @@ namespace MovieNight.Controllers
         // GET: Movies
         public ActionResult Index(string searchString, string movieGenre, string searchDirector, string orderBy)
         {
+
+   //          TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> NowPlayingMovies = client.GetMovieList(MovieListType.NowPlaying).TotalResults;
+
             // Set values received to keep the form withs its values
             ViewBag.searchString = searchString;
             ViewBag.selectedGenre = movieGenre;
@@ -148,8 +151,7 @@ namespace MovieNight.Controllers
             {
                 return RedirectToAction("AccessDenied", "Users");
             }
-
-            TMDbLib.Objects.Movies.Movie result = client.GetMovie(id);
+            TMDbLib.Objects.Movies.Movie result = client.GetMovie(id, MovieMethods.Videos);
             Crew Director = client.GetMovieCredits(id).Crew.Where(crew => crew.Job == "Director").FirstOrDefault();
 
             result.Homepage = "";
