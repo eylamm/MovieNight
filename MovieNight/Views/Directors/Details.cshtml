@@ -43,27 +43,23 @@
                             }
                             else
                             {
-                                foreach (var item in Model.Movies)
+                                for (var i = 0; i < Model.Movies.Count; i += 3)
                                 {
                                     <div class="row">
-                                        <div class="col-sm-5">
-                                            <div>
-                                                <img class="img-responsive user-photo" src="@item.Poster">
-                                            </div>
-                                        </div>
+                                        <ol class="people">
+                                            @for (var j = 0; j <= 2 && i + j < Model.Movies.Count; j++)
+                                            {
+                                                var item = Model.Movies.ElementAt(i + j);
 
-                                        <div class="col-sm-7">
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <strong>@Html.ActionLink(item.Title, "Details", "Movies", new { id = item.ID }, null)</strong> <span class="text-muted">@item.ReleaseDate.ToShortDateString()</span>
-                                                </div>
-                                                <div class="panel-body">
-                                                    @item.Plot
-                                                </div>
-                                            </div>
-                                        </div>
+                                                <li>
+                                                    <img src="@item.Poster" alt="@item.Title" onerror="this.src = 'http://mdepinet.org/wp-content/uploads/person-placeholder.jpg'" style="width:150px; height:150px;" class="profile lazyautosizes lazyloaded">
+                                                    <h4>@Html.ActionLink(@item.Title, "Details", "Movies", new { id = item.ID }, null)</h4>
+                                                </li>
+                                            }
+                                        </ol>
                                     </div>
                                 }
+
                             }
                         </div>
                         <div class="tab-pane" id="tab_stats_stars">
