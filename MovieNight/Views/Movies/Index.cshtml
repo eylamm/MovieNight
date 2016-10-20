@@ -5,8 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="row">
+<!-- Using the specific javascript functions for the movie inex page-->
+<script src="~/Scripts/movie-index-scripts.js"></script>
 
+<div class="row">
     <div class="col-md-3">
         <form>
             <p class="lead">View</p>
@@ -60,38 +62,58 @@
 
     <div class="col-md-9">
 
-        <div class="row">
-
+        <div class="row" id="displayedMovies">
+          <!-- If there are movies to display in the MovieNight DB -->
             @if (Model.Count() > 0)
             {
+                int numOfMoviesToDisply = 0;
+                int MOVIE_NUMBER_LIMIT = 11;
+
+                // Going over all of the movies to display
                 foreach (var item in Model)
                 {
-                    <div class="col-sm-4 col-lg-4 col-md-4">
-                        <div class="thumbnail">
-                            <img src="@item.Poster" alt="@item.Title">
-                            <div class="caption">
-                                <h4>
-                                    @Html.ActionLink(item.Title, "Details", new { id = item.ID })
-                                </h4>
-                                <h4 class="pull-right">@item.ReleaseDate.Year</h4>
-                                <br /><br />
-                                <p>
-                                    @foreach (var genre in item.Genre.Split(','))
-                                    {
-                                        <button class="btn btn-xs btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
-                                    }
-                                </p>
-                            </div>
-                            <div class="ratings">
-                                <p class="pull-right">@item.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>
-                                <p>
-                                    @item.Rating <span class="glyphicon glyphicon-star"></span>
-                                </p>
+                    // Check that we have not reached the movie number limit
+                    if (numOfMoviesToDisply > MOVIE_NUMBER_LIMIT)
+                    {
+                        // Exit the disply movies loop
+                        break;
+                    }
+
+                    // Showing movies on movie page according to the wnated limit
+                    else
+                    {
+                        <div class="col-sm-4 col-lg-4 col-md-4 movieElement">
+                            <div class="thumbnail">
+                                <img src="@item.Poster" alt="@item.Title">
+                                <div class="caption">
+                                    <h4 class="movieTitle">
+                                        @Html.ActionLink(item.Title, "Details", new { id = item.ID })
+                                    </h4>
+                                    <h4 class="pull-right releaseYear">@item.ReleaseDate.Year</h4>
+                                    <br /><br />
+                                    <p calss="movieGenres">
+                                        @foreach (var genre in item.Genre.Split(','))
+                                        {
+                                            <button class="btn btn-xs btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
+                                        }
+                                    </p>
+                                </div>
+                                <div class="ratings">
+                                    <p class="pull-right">@item.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>
+                                    <p>
+                                        @item.Rating <span class="glyphicon glyphicon-star"></span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                        // Increase index
+                        numOfMoviesToDisply++;
+                    }
                 }
             }
+
+            // If there are no movies to disply
             else
             {
                 <div class="container-fluid well span9">
@@ -99,6 +121,11 @@
                 </div>
             }
 
+            <div class="form-group" id="ShowMeMore-div">
+                <div id="ShowMeMore" class="col-md-offset-5 col-md-10" style="margin-top:35px;">
+                    <input type="submit" value="Show Me More" class="btn btn-default" />
+                </div>
+            </div>
         </div>
     </div>
 </div>

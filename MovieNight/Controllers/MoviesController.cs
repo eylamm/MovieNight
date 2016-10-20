@@ -14,6 +14,7 @@ using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
+using System.Web.Script.Serialization;
 
 namespace MovieNight.Controllers
 {
@@ -26,9 +27,6 @@ namespace MovieNight.Controllers
         // GET: Movies
         public ActionResult Index(string searchString, string movieGenre, string searchDirector, string orderBy)
         {
-
-   //          TMDbLib.Objects.General.SearchContainer<TMDbLib.Objects.General.MovieResult> NowPlayingMovies = client.GetMovieList(MovieListType.NowPlaying).TotalResults;
-
             // Set values received to keep the form withs its values
             ViewBag.searchString = searchString;
             ViewBag.selectedGenre = movieGenre;
@@ -156,6 +154,51 @@ namespace MovieNight.Controllers
             return this.Json(result);
         }
 
+        public ActionResult GetNextMovies(int numOfMovies, string lastMovieTitle)
+        {
+            // Check the MovieNightDB state
+            if (db.Database.Connection.State == ConnectionState.Open)
+            {
+                // Close any open DB connections
+                db.Database.Connection.Close();
+            }
+
+            // Create the movie query
+            var GetAllMovies = from m in db.Movies
+                               select m;
+
+            // Get the last movie displyed on page, from MovieNightDB
+            MovieNight.Models.Movie lastMovie = GetAllMovies.Where(m => m.Title == lastMovieTitle).FirstOrDefault();
+
+            // Get the next movies to return to page
+            var NextMoviesToDisplay = GetAllMovies.Where(m => m.ID > lastMovie.ID).Take(numOfMovies).ToList();
+
+            // Create a new movie list object
+            List<MovieNight.Models.Movie> movieList = new List<Models.Movie>();
+
+            // Create and initialize the movie object with the details of the next movie to display
+            foreach (var currMovie in NextMoviesToDisplay)
+            {
+                // Create a new movie object
+                MovieNight.Models.Movie MovieToAdd = new Models.Movie();
+
+                // Set the new movie features
+                MovieToAdd.ID          = currMovie.ID;
+                MovieToAdd.Title       = currMovie.Title;
+                MovieToAdd.Poster      = currMovie.Poster;
+                MovieToAdd.ReleaseDate = currMovie.ReleaseDate;
+                MovieToAdd.Genre       = currMovie.Genre;
+                MovieToAdd.Rating      = currMovie.Rating;
+                MovieToAdd.Reviews     = currMovie.Reviews;
+
+                // Add the current movie to movies list
+                movieList.Add(MovieToAdd);
+            }
+
+            // Return the wated movies to display, as JSON string
+            return this.Json(JsonConvert.SerializeObject(movieList));
+        }
+        
         // GET: Movies/Details/5
         public ActionResult Details(int? id)
         {
