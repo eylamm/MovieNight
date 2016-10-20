@@ -15,7 +15,17 @@ namespace MovieNight.Controllers
         private MovieNightDB db = new MovieNightDB();
 
         // GET: Reviews
-        public ActionResult Manage(string criticName, string reviewedMovie, string reviewContent, string groupByMovie)
+        public ActionResult Manage()
+        {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+            return View(db.Reviews.Include(r => r.Movie));
+        }
+
+        // GET: Reviews
+        public ActionResult Index(string criticName, string reviewedMovie, string reviewContent, string groupByMovie)
         {
             /********************************************/
             /****** Search by Content or CriticName *****/
@@ -33,15 +43,6 @@ namespace MovieNight.Controllers
             var MoviesQry = from movie in db.Movies
                             join review in db.Reviews on movie.ID equals review.MovieID
                             select movie;
-
-            // Create a new movie list
-            var MovieLst = new List<string>();
-
-            // Add only distinct genres to the genre list
-            MovieLst.AddRange(MoviesQry.Select(movie => movie.Title).Distinct());
-
-            // Initalize html helper with the list of movies that have been reviewed
-            ViewBag.groupByMovie = new SelectList(MovieLst);
 
             /*********************************/
             /****** Apply Search Filters *****/
@@ -83,39 +84,15 @@ namespace MovieNight.Controllers
         }
 
         // GET: Reviews/GroupBy
-        public ActionResult GroupBy(string groupByMovie)
+        public ActionResult GroupBy()
         {
-            // Create the movies query - all movies with an id spcified in the review table
-            var MoviesQry = from movie in db.Movies
-                            join review in db.Reviews on movie.ID equals review.MovieID
-                            select movie;
-
-            // Create a new movie list
-            var MovieLst = new List<string>();
-
-            // Add only distinct genres to the genre list
-            MovieLst.AddRange(MoviesQry.Select(movie => movie.Title).Distinct());
-
-            // Initalize html helper with the list of movies that have been reviewed
-            ViewBag.groupByMovie = new SelectList(MovieLst);
-
             var results = from p in db.Reviews
                           group p by p.Movie.Title into g
                           select new RenderView { MovieTitle = g.Key, ReviewCount = g.Count() };
 
-            // If we wnat to group by all movies
-            if (groupByMovie.Equals(""))
-            {
                 // Return all reviewed grouped by movie title
                 return View(results);
-            }
 
-            // If the user wants to group by a specifiec movie
-            else
-            {
-                // Select the specified movie 
-                return View(results);
-            }
         }
 
         // GET: Reviews/Details/5
@@ -136,6 +113,11 @@ namespace MovieNight.Controllers
         // GET: Reviews/Create
         public ActionResult Create()
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             ViewBag.MovieID = new SelectList(db.Movies, "ID", "Title");
             return View();
         }
@@ -147,6 +129,11 @@ namespace MovieNight.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,CriticName,Date,MovieID,Content")] Review review, string returnUrl)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+            
             if (ModelState.IsValid)
             {
                 db.Reviews.Add(review);
@@ -166,6 +153,11 @@ namespace MovieNight.Controllers
         // GET: Reviews/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -186,6 +178,11 @@ namespace MovieNight.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,CriticName,Date,MovieID,Content")] Review review)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             if (ModelState.IsValid)
             {
                 db.Entry(review).State = EntityState.Modified;
@@ -199,6 +196,11 @@ namespace MovieNight.Controllers
         // GET: Reviews/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -216,6 +218,11 @@ namespace MovieNight.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
+            {
+                return RedirectToAction("AccessDenied", "Users");
+            }
+
             Review review = db.Reviews.Find(id);
             db.Reviews.Remove(review);
             db.SaveChanges();

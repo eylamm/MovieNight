@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Blog Home - Start Bootstrap Template</title>
+    <title>Movie Night - @ViewBag.Title</title>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Styles.Render("~/Content/css")
@@ -38,20 +38,21 @@
                     <li>
                         @Html.ActionLink("Directors", "Index", "Directors")
                     </li>
+                    <li>
+                        @Html.ActionLink("Reviews", "Index", "Reviews")
+                    </li>
                     <li class="dropdown pull-right">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manage <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             @if (Session["user"] != null)
-                                    {
-                                        MovieNight.Models.User user = Session["user"] as MovieNight.Models.User;
-                                        if (user.Role == MovieNight.Models.Role.Admin)
-                                        {
-
-
-                                <li>@Html.ActionLink("Manage Movies", "Manage", "Movies")</li>
-                                <li>@Html.ActionLink("Manage Directors", "Manage", "Directors")</li>
-                                <li>@Html.ActionLink("Manage Reviews", "Manage", "Reviews")</li>
-                                <li class="divider"></li>
+                            {
+                                MovieNight.Models.User user = Session["user"] as MovieNight.Models.User;
+                                if (user.Role == MovieNight.Models.Role.Admin)
+                                {
+                                    <li>@Html.ActionLink("Manage Movies", "Manage", "Movies")</li>
+                                    <li>@Html.ActionLink("Manage Directors", "Manage", "Directors")</li>
+                                    <li>@Html.ActionLink("Manage Reviews", "Manage", "Reviews")</li>
+                                    <li class="divider"></li>
                                 }
                                 <li><a>Hello @user.Username</a></li>
                                 <li>@Html.ActionLink("Logout", "Logout", "Users")</li>
@@ -71,12 +72,19 @@
     </nav>
 
     <!-- Login -->
+    <script>
+        $(document).ready(function () {
+            $("#fromURI").val(location.href);
+        });
+    </script>
+
     <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
         <div class="modal-dialog">
             <div class="loginmodal-container">
                 <h1>Login to Your Account</h1><br>
                 <form method="post" action="/Users/Login">
                     @Html.AntiForgeryToken()
+                    <input type="text" id="fromURI" name="fromURI" style="display:none"/>
                     <input type="text" name="Username" id="Username" placeholder="Username">
                     <input type="password" name="Password" id="Password" placeholder="Password">
                     <input type="submit" name="login" class="login loginmodal-submit" value="Login">
@@ -85,7 +93,6 @@
         </div>
     </div>
     <!-- /Login -->
-
     <!-- Page Content -->
     <div class="container">
 
@@ -110,7 +117,7 @@
     </div>
     <!-- /.container -->
     <!-- jQuery -->
-   
+
     @RenderSection("scripts", required: false)
 
 </body>
