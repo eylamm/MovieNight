@@ -177,7 +177,7 @@ footer {
 .loginmodal-submit:hover {
   /* border: 1px solid #2f5bb7; */
   border: 0px;
-  text-shadow: 0 1px rgba(0,0,0,0.3);
+  text-shadow: 0 4px rgba(0,0,0,0.3);
   background-color: #357ae8;
   /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#357ae8)); */
 }
@@ -190,7 +190,12 @@ footer {
   display: inline-block;
   opacity: 0.6;
   transition: opacity ease 0.5s;
-} 
+}
+
+.fade {
+    -webkit-transition: opacity 0.15s linear;
+    transition: opacity 0.15s linear;
+}
 
 
 /*Cast view Style*/
@@ -208,11 +213,7 @@ ol.people {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
-    -webkit-justify-content: space-between;
-    -moz-justify-content: space-between;
-    -ms-justify-content: space-between;
     -ms-flex-pack: justify;
     justify-content: space-between;
 }
@@ -254,4 +255,56 @@ ol.people li p {
     font-size: 12px;
     line-height: 1.5;
     border-radius: 3px;
+}
+
+/* Navigation bar style */
+
+.nav > li > a {
+  position: relative;
+  display: block;
+  padding: 0px, 0px;
+}
+
+.navbar-brand {
+  float: left;
+  height: 50px;
+  padding: 0px 0px;
+  font-size: 18px;
+  line-height: 20px;
+}
+
+@media (min-width: 768px) {
+  .navbar > .container .navbar-brand,
+  .navbar > .container-fluid .navbar-brand {
+    margin-left: -15px;
+  }
+}
+
+/* More Like This */
+ol.moreLiskThis {
+    list-style:none; 
+    margin-right:0px;
+    text-align:left; 
+    padding-top:0px;
+}
+
+b.similarTitle{
+    word-wrap: break-word;
+    padding-left:15px;
+}
+
+h5, .h5 {
+    font-size: 13px;
+}
+
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+
 }

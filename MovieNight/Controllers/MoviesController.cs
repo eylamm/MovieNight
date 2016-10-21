@@ -54,7 +54,6 @@ namespace MovieNight.Controllers
                            orderby d.Genre
                            select d.Genre;
 
-
             // Add only distinct genres to the genre list
             foreach (var genreRow in GenreQry)
             {

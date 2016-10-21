@@ -1,4 +1,4 @@
-﻿ @model IEnumerable<MovieNight.Models.Movie>
+﻿ @model IEnumerable<MovieNight.Models.Movie> 
 
 @{
     ViewBag.Title = "Movies";
@@ -69,7 +69,6 @@
             {
                 int numOfMoviesToDisply = 0;
                 int MOVIE_NUMBER_LIMIT = 8;
-               
 
                 // Show unlimited results for filtered searches
                 if (!string.IsNullOrEmpty(ViewBag.searchString) || !string.IsNullOrEmpty(ViewBag.selectedGenre) ||
@@ -91,31 +90,34 @@
                     // Showing movies on movie page according to the wnated limit
                     else
                     {
-                        <div class="col-sm-4 col-lg-4 col-md-4 movieElement">
-                            <div class="thumbnail">
-                                <img src="@item.Poster" alt="@item.Title">
-                                <div class="caption">
-                                    <h4 class="movieTitle">
-                                        @Html.ActionLink(item.Title, "Details", new { id = item.ID })
-                                    </h4>
-                                    <h4 class="pull-right releaseYear">@item.ReleaseDate.Year</h4>
-                                    <br /><br />
-                                    <p class="movieGenres">
-                                        @foreach (var genre in item.Genre.Split(','))
-                                        {
-                                            <button class="btn btn-xs btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
-                                        }
-                                    </p>
-                                </div>
-                                <div class="ratings">
-                                    <p class="pull-right reviewCount">@item.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>
-                                    <p class="ratingNumber">
-                                        @item.Rating <span class="glyphicon glyphicon-star"></span>
-                                    </p>
+                        <section name="movieThumbnailInfo">
+                            <div class="col-sm-4 col-lg-4 col-md-4 movieElement">
+                                <div class="thumbnail">
+                                    <img src="@item.Poster" alt="@item.Title">
+                                    <div class="caption">
+                                        <h4 class="movieTitle">
+                                            @Html.ActionLink(item.Title, "Details", new { id = item.ID })
+                                        </h4>
+                                        <h4 class="pull-right releaseYear">@item.ReleaseDate.Year</h4>
+                                        <br /><br />
+                                        <p class="movieGenres">
+                                            <nav class="movieGenreLinks">
+                                                @foreach (var genre in item.Genre.Split(','))
+                                                {
+                                                    <button class="btn btn-xs btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
+                                                }
+                                            </nav>
+                                        </p>
+                                    </div>
+                                    <div class="ratings">
+                                        <p class="pull-right reviewCount">@item.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>
+                                        <p class="ratingNumber">
+                                            @item.Rating <span class="glyphicon glyphicon-star"></span>
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                        </section>
                         // Increase index
                         numOfMoviesToDisply++;
                     }

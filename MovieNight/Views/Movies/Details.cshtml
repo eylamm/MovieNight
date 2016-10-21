@@ -5,100 +5,108 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <div>
     <div class="row">
-        <div name="Image">
-            <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Poster" alt="@Model.Title" style="width:300px; height:450px; margin-top:20px;">
-        </div>
-        <div class="col-md-6 col-sm-6 col-lg-6">
-            <h1 class="pull-left">@Model.Title</h1>
-            <br />
-            <h4 class="pull-right">@Model.ReleaseDate.ToShortDateString()</h4>
-            <br /><br />
-            <h4 class="pull-right">@Model.Rating <span class="glyphicon glyphicon-star"></span></h4>
-            <br />
-            <p>
-                <!-- Displays the movie genres for the selected movie-->
-                @foreach (var genre in Model.Genre.Split(','))
-                {
-                    <button class="btn btn-sm btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
-                }
-            </p>
-            <p><b>Plot: </b>@Model.Plot</p>
-            <p>
-                <b>Director: </b>
-                                <img src="@Model.Director.Picture" alt="@Model.Director.Name" style="width:100px; height:100px;" class="profile lazyautosizes lazyloaded img-circle">
-                                @Html.ActionLink(Model.Director.Name, "Details", "Directors", new { id = Model.DirectorID }, null)
-                            
-            </p>
-
-            <!-- Movie trailer-->
-            <div>
-                <iframe width="530" height="345" src="@Model.Trailer" allowfullscreen="allowfullscreen"></iframe>
+        <article name="movieDetails">
+            <div name="Image">
+                <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Poster" alt="@Model.Title" style="width:300px; height:450px; margin-top:20px;">
             </div>
-        </div>
+            <div class="col-md-6 col-sm-6 col-lg-6">
+                <header name="movieDetails">
+                    <h1 class="pull-left">@Model.Title</h1>
+                    <br />
+                    <h4 class="pull-right">@Model.ReleaseDate.ToShortDateString()</h4>
+                    <br /><br />
+                    <h4 class="pull-right">@Model.Rating <span class="glyphicon glyphicon-star"></span></h4>
+                    <br />
+                    <p>
+                        <nav name="genreLinks">
+                            <!-- Displays the movie genres for the selected movie-->
+                            @foreach (var genre in Model.Genre.Split(','))
+                            {
+                                <button class="btn btn-sm btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
+                            }
+                        </nav>
+                    </p>
+                    <p><b>Plot: </b>@Model.Plot</p>
+                    <p>
+                        <b>Director: </b>
+                        <img src="@Model.Director.Picture" alt="@Model.Director.Name" style="width:100px; height:100px;" class="profile lazyautosizes lazyloaded img-circle">
+                        @Html.ActionLink(Model.Director.Name, "Details", "Directors", new { id = Model.DirectorID }, null)
 
-        <!--more like this-->
-        @{
-            int count = 0;
-            <h3>More Like This:</h3>
-            <center>
-                <ol style="list-style:none; margin-right:0px;">
-                    <!-- Displays the 4 similar movies to this one-->
-                    @foreach (var similar in ViewBag.moreLikeThis.Results)
-                    {
-                        if (count < 3)
-                        {
-                            string MoviePoster = "https://image.tmdb.org/t/p/w250_and_h141_bestv2" + @similar.PosterPath;
-                            <li style="text-align:right; padding-top:0px;">
-                                <h5><b>@similar.Title (<span class="glyphicon glyphicon-star"><b>@similar.VoteAverage</b></span>)</b></h5>
-                                <img class="col-md-3 col-sm-3 col-lg-3" src=@MoviePoster alt=@similar.Title>
-                                <br />
-                                <br />
-                                <br />
-                                <br />
-                                <br />
-                            </li>
-                        }
-                        count++;
-                    }
-                </ol>
-            </center>
-        }
+                    </p>
+                </header>
+                <!-- Movie trailer-->
+                <div>
+                    <iframe width="530" height="345" src="@Model.Trailer" allowfullscreen="allowfullscreen"></iframe>
+                </div>
+            </div>
+            <aside name="similarMovies">
+                <!--more like this-->
+                @{
+                    int count = 0;
+                    <h3><b>More Like This:</b></h3>
+                    <center>
+                        <aside>
+                            <ol class="moreLiskThis">
+                                <!-- Displays the 4 similar movies to this one-->
+                                @foreach (var similar in ViewBag.moreLikeThis.Results)
+                                {
+                                    if (count < 3)
+                                    {
+                                        string MoviePoster = "https://image.tmdb.org/t/p/w250_and_h141_bestv2" + @similar.PosterPath;
+                                        <li>
+                                            <img class="col-md-3 col-sm-3 col-lg-3" src=@MoviePoster alt=@similar.Title>
+                                            <h5><b class="similarTitle">@similar.Title (<span class="glyphicon glyphicon-star"><b>@similar.VoteAverage</b></span>)</b></h5>
+                                        </li>
+                                    }
+                                    count++;
+                                }
+                            </ol>
+                        </aside>
+                    </center>
+                }
+            </aside>
+        </article>
     </div>
-    <!-- Displays the movie cast information from TMDB-->
-    <section class="top_billed" name="top_billed">
-        <h3>Top Billed Cast</h3>
-        <ol class="people">
-            @{
-                int counter = 0;
+
+    <aside name="movieCastList">
+        <!-- Displays the movie cast information from TMDB-->
+        <section class="top_billed" name="top_billed">
+            <h3>Top Billed Cast</h3>
+            <ol class="people">
+                @{
+                    int counter = 0;
 
                 <!-- Going over six of the cast personals to display on the movie details page-->
-                foreach (var currCast in ViewBag.cast)
-                {
+                    foreach (var currCast in ViewBag.cast)
+                    {
                     <!-- Display a list of cast members, showing - person's name, charachter name and profile pic-->
-                    <li>
-                        <img src="@ViewBag.baseImageURL@currCast.ProfilePath" alt="@currCast.Name" onerror="this.src = 'http://mdepinet.org/wp-content/uploads/person-placeholder.jpg'" style="width:150px; height:150px;" class="profile lazyautosizes lazyloaded">
-                        <h4>@currCast.Name</h4>
-                        <h6><b>@currCast.Character</b></h6>
-                    </li>
+                        <li>
+                            <img src="@ViewBag.baseImageURL@currCast.ProfilePath" alt="@currCast.Name" onerror="this.src='http://mdepinet.org/wp-content/uploads/person-placeholder.jpg'" style="width:150px; height:150px;" class="profile lazyautosizes lazyloaded">
+                            <h4>@currCast.Name</h4>
+                            <h6><b>@currCast.Character</b></h6>
+                        </li>
 
                     <!-- Increase the cast personals counter-->
-                    counter++;
+                        counter++;
 
                     <!-- Display no more than six cast members-->
-                    if (counter > 5)
-                    {
-                        break;
+                        if (counter > 5)
+                        {
+                            break;
+                        }
                     }
                 }
-            }
-        </ol>
+            </ol>
 
-        <!-- A link to the cast discription on TMDB itself-->
-        <p class="full_width button"><a class="button rounded" href="https://www.themoviedb.org/movie/@ViewBag.currMovieTMDBID@Model.Title.Replace(" ", string.Empty)/cast">See Full Cast &amp; Crew on TMDB</a></p>
+            <!-- A link to the cast discription on TMDB itself-->
+            <p class="full_width button"><a class="button rounded" href="https://www.themoviedb.org/movie/@ViewBag.currMovieTMDBID@Model.Title.Replace(" ", string.Empty)/cast">See Full Cast &amp; Crew on TMDB</a></p>
 
-    </section>
+        </section>
+    </aside>
+
     <div class="row">
         <div>
             <h4 class="pull-right">@Model.Reviews.Count <span class="glyphicon glyphicon-comment"></span></h4>
@@ -120,7 +128,7 @@
                                 <div>
                                     <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
                                 </div>
-                            </div><!-- /col-sm-1 -->
+                            </div>
 
                             <div class="col-sm-5">
                                 <div class="panel panel-default">
@@ -129,12 +137,13 @@
                                     </div>
                                     <div class="panel-body">
                                         @item.Content
-                                    </div><!-- /panel-body -->
-                                </div><!-- /panel panel-default -->
-                            </div><!-- /col-sm-5 -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     }
                 }
+
                 <hr />
 
                 <div class="row">
@@ -158,21 +167,17 @@
 
                                         <div class="text-right">
                                             <br />
-                                            <a class="btn btn-danger btn-sm" href="#post-review-box" data-toggle="collapse" id="close-review-box" ">
+                                            <a class="btn btn-danger btn-sm" href="#post-review-box" data-toggle="collapse" id="close-review-box">
                                                 <span class="glyphicon glyphicon-remove"></span> Cancel
                                             </a>
                                             <button class="btn btn-success btn-sm" type="submit"><span class="glyphicon glyphicon-save"></span> Save</button>
                                         </div>
                                     </form>
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

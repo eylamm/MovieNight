@@ -25,21 +25,29 @@
 </head>
 
 <body>
-
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav" style="width:100%">
-                    <li>
-                        @Html.ActionLink("Movie Night", "Index", "Movies", null, new { @class = "navbar-brand" })
+                    <li class="navbar-brand">
+                           <canvas width="50" height="50" id="myCanvas1"></canvas>
                     </li>
                     <li>
-                        @Html.ActionLink("Directors", "Index", "Directors")
+                        @Html.ActionLink("MovieNight", "Index", "Movies", null, new { @class = "navbar-brand" })
+                    </li>
+                    <li class="navbar-brand">
+                        <canvas width="50" height="50" id="myCanvas2"></canvas>
                     </li>
                     <li>
-                        @Html.ActionLink("Reviews", "Index", "Reviews")
+                        @Html.ActionLink("Directors", "Index", "Directors", null, new { @class = "navbar-brand" })
+                    </li>
+                    <li class="navbar-brand">
+                        <canvas width="50" height="50" id="myCanvas3"></canvas>
+                    </li>
+                    <li>
+                        @Html.ActionLink("Reviews", "Index", "Reviews", null, new { @class = "navbar-brand" })
                     </li>
                     <li class="dropdown pull-right">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manage <span class="caret"></span></a>
@@ -115,11 +123,8 @@
         </footer>
 
     </div>
-    <!-- /.container -->
-    <!-- jQuery -->
-
     @RenderSection("scripts", required: false)
-
+    @Scripts.Render("~/Scripts/canvas-js.js");
 </body>
 
 </html>

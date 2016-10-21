@@ -76,6 +76,26 @@ $(document).ready(function () {
 
             // Move the "Show Me More" button down below the new added movies
             $("#ShowMeMore-div").appendTo("#displayedMovies");
+
+            // Check if there are more movies to display
+            $.post("/Movies/GetNextMovies",
+            {
+                numOfMovies: numOfMoviesDisplay,
+                lastMovieTitle: $(".movieTitle").last().find("a").text(),
+            },
+
+             function (data, status) {
+
+                 // Parse the recieved data to JSON format
+                 var jsonMovies = JSON.parse(data)
+
+                 // If there are no more movies to display
+                 if (jsonMovies.length == 0)
+                 {
+                     // Hide the Show Me More button
+                     $("#ShowMeMore").hide()
+                 }
+             });
         });
     });
 });
