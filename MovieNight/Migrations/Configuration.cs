@@ -99,7 +99,7 @@ namespace MovieNight.Migrations
             var Addedmovies = new List<MovieNight.Models.Movie>();
 
             // Goes over all of the now playing movies
-            foreach (MovieResult currMovie in UpComingMovies.Results)
+            foreach (MovieResult currMovie in NowPlayingMovies.Results)
             {
                 // Get the genre list into one string 
                 List<Genre> genreList = client.GetMovie(currMovie.Id).Genres;

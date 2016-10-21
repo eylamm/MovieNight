@@ -85,6 +85,9 @@ namespace MovieNight.Controllers
             // Check the search string wanted by the user
             if (!String.IsNullOrEmpty(searchString))
             {
+                // Order the movies by title
+                MoviesQuery = MoviesQuery.OrderBy(m => m.Title);
+
                 // Select all the movies with the spciefied string in it's title
                 MoviesQuery = MoviesQuery.Where(s => s.Title.Contains(searchString));
             }
@@ -185,7 +188,10 @@ namespace MovieNight.Controllers
             MovieNight.Models.Movie lastMovie = GetAllMovies.Where(m => m.Title == lastMovieTitle).FirstOrDefault();
 
             // Get the next movies to return to page
-            var NextMoviesToDisplay = GetAllMovies.Where(m => m.ID > lastMovie.ID).Take(numOfMovies).ToList();
+            System.Collections.Generic.List<MovieNight.Models.Movie> NextMoviesToDisplay = new List<Models.Movie>();
+
+            // Get the next movies to return to page
+            NextMoviesToDisplay = GetAllMovies.Where(m => m.ID > lastMovie.ID).Take(numOfMovies).ToList();
 
             // Create a new movie list object
             List<MovieNight.Models.Movie> movieList = new List<Models.Movie>();
@@ -203,7 +209,7 @@ namespace MovieNight.Controllers
                 MovieToAdd.ReleaseDate = currMovie.ReleaseDate;
                 MovieToAdd.Genre       = currMovie.Genre;
                 MovieToAdd.Rating      = currMovie.Rating;
-                MovieToAdd.Reviews     = currMovie.Reviews;
+                MovieToAdd.DirectorID  = currMovie.Reviews.Count();
 
                 // Add the current movie to movies list
                 movieList.Add(MovieToAdd);

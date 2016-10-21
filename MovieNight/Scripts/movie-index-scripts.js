@@ -1,15 +1,15 @@
 ﻿
 $(document).ready(function () {
 
+    var orderBy = "";
     var numOfMoviesDisplay = 3;
-    var postrBasePath  = "https://image.tmdb.org/t/p/w300/7D6hM7IR0TbQmNvSZVtEiPM3H5h.jpg";
-
+    var postrBasePath = "https://image.tmdb.org/t/p/w300/7D6hM7IR0TbQmNvSZVtEiPM3H5h.jpg";
 
     $("#ShowMeMore").click(function () {
         $.post("/Movies/GetNextMovies",
         {
             numOfMovies: numOfMoviesDisplay,
-            lastMovieTitle: $(".movieTitle").last().find("a").text()
+            lastMovieTitle: $(".movieTitle").last().find("a").text(),
         },
         function (data, status) {
             console.log(data);
@@ -39,15 +39,17 @@ $(document).ready(function () {
                 var movieYear = new Date(jsonMovies[key].ReleaseDate).getFullYear();
                 movieCopy.find(".releaseYear").text(movieYear);
                 
-                console.log(jsonMovies[key].Genre);
+                // Clear the gneres of the copied movie
+                movieCopy.find(".movieGenres").children().remove();
 
-                var after = jsonMovies[key].Genre.split(',')
-                console.log(after);
+                // Split the genre array
+                var afterSplit = jsonMovies[key].Genre.split(',');
 
-                for (var i = 0; i < jsonMovies[key].Genre.split(',').length ; i++)
+                // Goes over all of the genres of the current movie
+                for (var i = 0; i < afterSplit.length ; i++)
                 {
                     // Get the cureent Gender of the movie
-                    var currGenre = after[i];
+                    var currGenre = afterSplit[i];
 
                     // Create the button tag for the genre
                     var buttonTag = $("<button> </button>").attr("class", "btn btn-xs btn-default");
@@ -60,33 +62,20 @@ $(document).ready(function () {
                     movieCopy.find(".movieGenres").append(buttonTag);
                 }
 
+                // Set the new movie review count
+                var reviewCount = $("<span> </span>").attr("class", "glyphicon glyphicon-comment");
+                movieCopy.find(".reviewCount").text(jsonMovies[key].DirectorID).append(reviewCount);
+
+                // Set the new movie rating
+                var ratingStar = $("<span> </span>").attr("class", "glyphicon glyphicon-star");
+                movieCopy.find(".ratingNumber").text(jsonMovies[key].Rating).append(ratingStar);
+
                 // Appent the new movie element to the movies page
                 $("#displayedMovies").append(movieCopy);
-
-                //// Create the specific movie div element
-                //var movieDiv = $("<div></div>").attr("class", "col-sm-4 col-lg-4 col-md-4");
-
-                //// Create the thumbnail div elemnt
-                //var thumbnailDiv = $("<div></div>").attr("class", "thumbnail");
-
-                //// Create the img tag
-                //var imageTag = $("<img></img>").attr("src", jsonMovies[key].Poster)
-
-                //// Create the caption div
-                //var captionDiv = $("<div></div>").attr("class", "caption");
-                
-                //// Create the ratings div
-                //var ratingDiv = $("<div></div>").attr("class", "ratings");
-
-                //// Append the elemnts
-                //thumbnailDiv.append(imageTag, captionDiv, ratingDiv);
-                //movieDiv.append(thumbnailDiv);
-                //$("#displayedMovies").append(movieDiv);
             });
 
             // Move the "Show Me More" button down below the new added movies
             $("#ShowMeMore-div").appendTo("#displayedMovies");
         });
     });
-    
 });
