@@ -1,7 +1,7 @@
 ﻿@model MovieNight.Models.Director
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit " + Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -13,8 +13,6 @@
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Director</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ID)
 

@@ -290,7 +290,6 @@
     <Content Include="Views\Reviews\Edit.cshtml" />
     <Content Include="Views\Reviews\Manage.cshtml" />
     <Content Include="Views\Reviews\GroupBy.cshtml" />
-    <Content Include="Views\Movies\Search.cshtml" />
     <Content Include="Views\Movies\Manage.cshtml" />
     <Content Include="Views\Directors\Manage.cshtml" />
     <Content Include="Views\Reviews\Index.cshtml" />
