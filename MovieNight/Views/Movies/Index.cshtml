@@ -105,7 +105,14 @@
                                             <nav class="movieGenreLinks">
                                                 @foreach (var genre in item.Genre.Split(','))
                                                 {
-                                                    <button class="btn btn-xs btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
+                                                    if (ViewBag.selectedGenre == genre.Trim())
+                                                    {
+                                                        <button class="btn btn-xs btn-info">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = "All" }, null)</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-xs btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
+                                                    }
                                                 }
                                             </nav>
                                         </div>
