@@ -1,6 +1,15 @@
 ﻿body {
     padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-  /*  background-image:url("https://i.ytimg.com/vi/JquobII5VjA/maxresdefault.jpg")*/
+    background-image:url("https://i.ytimg.com/vi/JquobII5VjA/maxresdefault.jpg");
+    color: #ccc;
+}
+
+a{
+    color: #ccc;
+}
+a:hover{
+    text-decoration:none;
+    color: #337ab7;
 }
 
 .slide-image {
@@ -18,7 +27,7 @@
 
 .caption {
     height: 130px;
-    overflow: hidden;
+    overflow: no-display;
 }
 
     .caption h4 {
@@ -32,18 +41,53 @@
 .ratings {
     padding-right: 10px;
     padding-left: 10px;
+    padding-top: 40px;
     color: #d17581;
 }
 
 .thumbnail {
     padding: 0;
     height: 550px;
+    background: none;
+    border: 5px solid #ccc;
 }
 
     .thumbnail .caption-full {
         padding: 9px;
         color: #333;
     }
+
+    .thumbnail .caption {
+        padding: 9px;
+        color: #ccc;
+        height: 100px;
+    }
+
+.btn {
+    margin: 0px;
+}
+
+.btnAdded {
+    margin: 2px;
+}
+
+.btn-default {
+    background-color:inherit;
+    color: #ccc;
+    margin-bottom: 4px;
+}
+.btn-default:hover a {
+     color: #337ab7;
+}
+
+.list-group-item {
+    background-color: inherit;
+    border: none;
+}
+
+.ratings {
+    color: #ccc;
+}
 
 footer {
     margin: 50px 0;
@@ -238,7 +282,7 @@ ol.people li img {
     border-radius: 50%;
     -webkit-border-radius: 91%;
     -moz-border-radius: 50%;
-    border: 2px solid #333;
+    border: 2px solid #ccc;
 }
 
 ol.people li p {
@@ -316,7 +360,40 @@ h5, .h5 {
 }
 
 /* Movie Genre Links*/
+.movieGenre{
+    height: 24px;
+    overflow: hidden;
+}
+
 .movieGenreLinks{
     padding-bottom:10px;
     display: -webkit-inline-box;
+    overflow: no-display;    
+}
+
+/* Directors index*/
+.well{
+    background-color: inherit;
+    border: none;
+}
+.directorInfo h6{
+    font-size:16px;
+}
+
+.directorPics {
+    border: 2px solid #ccc;
+}
+
+ol.people li img.moviesBy{
+    border:none;
+}
+
+/* Reviews */
+button, input, optgroup, select, textarea {
+    color: black;
+}
+
+/* Graphs*/
+g{
+    fill: #ccc;
 }

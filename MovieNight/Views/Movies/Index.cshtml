@@ -100,14 +100,15 @@
                                         </h4>
                                         <h4 class="pull-right releaseYear">@item.ReleaseDate.Year</h4>
                                         <br />
-                                        <p class="movieGenres">
+                                        <br />
+                                        <div class="movieGenre">
                                             <nav class="movieGenreLinks">
                                                 @foreach (var genre in item.Genre.Split(','))
                                                 {
                                                     <button class="btn btn-xs btn-default">@Html.ActionLink(genre.Trim(), "Index", "Movies", new { movieGenre = genre.Trim() }, null)</button>
                                                 }
                                             </nav>
-                                        </p>
+                                        </div>
                                     </div>
                                     <div class="ratings">
                                         <p class="pull-right reviewCount">@item.Reviews.Count <span class="glyphicon glyphicon-comment"></span></p>

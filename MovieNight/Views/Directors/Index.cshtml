@@ -58,28 +58,45 @@
     </div>
 
     <div class="col-md-9">
-
         <div class="row">
-
             @if (Model.Count() > 0)
             {
                 foreach (var item in Model)
                 {
-                <div class="container-fluid well span9">
-                    <div class="row-fluid">
-                        <div class="col-md-3">
-                            <img src="@item.Picture" class="img-circle" style="width:150px; height:150px;" onerror="this.src='http://mdepinet.org/wp-content/uploads/person-placeholder.jpg'">
-                        </div>
+                    <div class="container-fluid well span9">
+                        <div class="row-fluid">
+                            <div class="col-md-3">
+                                <img src="@item.Picture" class="img-circle directorPics" style="width:150px; height:150px;" onerror="this.src='http://mdepinet.org/wp-content/uploads/person-placeholder.jpg'">
+                            </div>
 
-                        <div class="col-md-6">
-                            <h3>@Html.ActionLink(item.Name, "Details", new { id = item.ID })</h3>
-                            <h6>Origin: @item.Origin</h6>
-                            <h6>Gender: @item.Gender.ToString()</h6>
-                            <h6>BirthDay: @item.DateOfBirth.ToShortDateString()</h6>
-                            <h6>Movies: @item.Movies.Count <span class="glyphicon glyphicon-facetime-video"></span></h6>
+                            <div class="col-md-3 directorInfo">
+                                <h3><b>@Html.ActionLink(item.Name, "Details", new { id = item.ID })</b></h3>
+                                <h6>Origin: @item.Origin</h6>
+                                <h6>Gender: @item.Gender.ToString()</h6>
+                                <h6>BirthDay: @item.DateOfBirth.ToShortDateString()</h6>
+                                <h6>Movies: @item.Movies.Count <span class="glyphicon glyphicon-facetime-video"></span></h6>
+                            </div>
+
+                            <div class="col-md-3">
+                               @for (var i = 0; i < 3; i += 3)
+                                {
+                                <div class="row">
+                                    <ol class="people">
+                                        @for (var j = 0; j <= 2 && i + j < item.Movies.Count; j++)
+                                        {
+                                            var currMovieitem = item.Movies.ElementAt(i + j);
+                                            <li>
+                                                <a href="/Movies/Details/@currMovieitem.ID">
+                                                    <img src="@currMovieitem.Poster" alt="@currMovieitem.Title" onerror="this.src = 'http://mdepinet.org/wp-content/uploads/person-placeholder.jpg'" style="width:120px; height:120px;" class="profile lazyautosizes lazyloaded moviesBy" />
+                                                </a>
+                                            </li>
+                                        }
+                                    </ol>
+                                </div>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
                 }
             }
             else

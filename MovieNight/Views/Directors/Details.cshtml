@@ -65,7 +65,7 @@
                             }
                         </div>
                         <div class="tab-pane" id="tab_stats_stars">
-                            <p>Number of movies by ratings</p>
+                            <p> <h4>Number of movies by ratings </h4> </p>
 
 
                             @{
@@ -124,6 +124,7 @@
                                   .append("g")
                                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
                                 svg.call(tip);
 
                                 var data = [@data];
@@ -159,6 +160,7 @@
 
 
 
+
                                 function type(d) {
                                     d.Count = +d.Count;
                                     return d;
@@ -167,7 +169,7 @@
                             </script>
                         </div>
                         <div class="tab-pane" id="tab_stats_calendar">
-                            <p>Number of movies by years</p>
+                            <p> <h4>Number of movies by years </h4> </p>
 
                             @{
                                 int age = DateTime.Now.Year - Model.DateOfBirth.Year + 1;
@@ -233,15 +235,15 @@
                                     .attr("class", "x axis")
                                     .attr("transform", "translate(0," + height + ")")
                                     .call(xAxis).selectAll("text")
-     .style("text-anchor", "end")
-     .attr("dx", "-.8em")
-     .attr("dy", ".15em")
-     .attr("transform", "rotate(-65)");;
+                                    .style("text-anchor", "end")
+                                    .attr("dx", "-.8em")
+                                    .attr("dy", ".15em")
+                                    .attr("transform", "rotate(-65)");;
 
                                 svg.append("g")
                                     .attr("class", "y axis")
                                     .call(yAxis)
-                                  .append("text")
+                                    .append("text")
                                     .attr("transform", "rotate(-90)")
                                     .attr("y", 6)
                                     .attr("dy", ".71em")

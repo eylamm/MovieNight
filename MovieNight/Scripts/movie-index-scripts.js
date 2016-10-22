@@ -52,7 +52,7 @@ $(document).ready(function () {
                     var currGenre = afterSplit[i];
 
                     // Create the button tag for the genre
-                    var buttonTag = $("<button> </button>").attr("class", "btn btn-xs btn-default");
+                    var buttonTag = $("<button> </button>").attr("class", "btn btn-xs btn-default btnAdded");
                     var linkTag   = $("<a> </a>").attr("href", "/?movieGenre=" + currGenre).text(currGenre);
 
                     // Append the link tag to the button tag
