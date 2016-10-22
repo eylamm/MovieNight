@@ -140,24 +140,22 @@ namespace MovieNight.Controllers
             return this.Json(client.GetPerson(id));
         }
 
-        public ActionResult AddDirectorAPI(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateFromAPI([Bind(Include = "ID,Name,Gender,DateOfBirth,Origin,Picture")] Director director)
         {
             if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
             {
                 return RedirectToAction("AccessDenied", "Users");
             }
 
-            TMDbLib.Objects.People.Person director = client.GetPerson(id);
-            Director added = db.Directors.Add(new Director
+            if (ModelState.IsValid)
             {
-                Name = director.Name,
-                Gender = Gender.Male,
-                DateOfBirth = (director.Birthday == null ? DateTime.Parse("January 1, 1900") : (DateTime)director.Birthday),
-                Origin = (director.PlaceOfBirth == "" ? "Unknown" : director.PlaceOfBirth.Split(',').Last()),
-                Picture = "https://image.tmdb.org/t/p/w300" + director.ProfilePath
-            });
-            db.SaveChanges();
-            return this.Json(added);
+                Director added = db.Directors.Add(director);
+                db.SaveChanges();
+                return this.Json(added);
+            }
+            return RedirectToAction("Create",director);
         }
 
         // GET: Directors/Create

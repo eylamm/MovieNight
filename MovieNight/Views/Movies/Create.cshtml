@@ -9,7 +9,7 @@
     $(document).ready(function () {
 
         $("#searchResult").hide();
-        $("#Title").on("change paste keyup keydown", function () {
+        $("#Title").on("change paste keyup", function () {
             $.post("/Movies/SearchApi",
             {
                 query: $("#Title").val()
@@ -47,25 +47,12 @@
                 },
                 function (data, status) {
                     console.log(data);
-                    if (data.Homepage == "noDirector")
-                    {
-                        
-                        if (confirm('This Movie is directed by ' + data.ImdbId + ' who is not in the database.\nwould you like to add him automaticaly?')) {
-                            $.post("/Directors/AddDirectorAPI",
-                            {
-                                id: data.VoteCount
-                            },
-                            function (data, status) {
-
-                                alert('The director ' + data.Name + ' was added successfully');
-                                var opt = $("<option> </option>").attr("value", data.ID).html(data.Name);
-                                $("#DirectorID").append(opt);
-                                $("#DirectorID").val(data.ID);
-                            });
-                        };
+                    if (data.Homepage == "noDirector") {
+                        $("#directorconfirm-modal").modal();
+                        $("#DirectorName").html(data.ImdbId);
+                        $("#DirectorModalID").val(data.VoteCount);
                     }
-                    else
-                    {
+                    else {
                         $("#DirectorID").val(data.Homepage);
                     }
                     $("#Title").val(data.Title);
@@ -86,10 +73,148 @@
                     $("#trailerprev").attr("src", "https://www.youtube.com/embed/" + data.Videos.Results[0].Key);
                 });
         });
+
+        $("#yes").click(function (event) {
+            $.post("/Directors/GetDetailsFromApi",
+                {
+                    id: $("#DirectorModalID").val()
+                },
+                function (data, status) {
+                    console.log(data);
+                    $("#directoradd-modal").modal();
+                    $("#Name").val(data.Name);
+                    var myDate = new Date(data.Birthday.match(/\d+/)[0] * 1);
+                    var birthdate = "" + myDate.getFullYear() + "-" + ("0" + myDate.getMonth()).slice(-2) + "-" + ("0" + myDate.getDay()).slice(-2);
+                    $("#DateOfBirth").val(birthdate);
+                    var origin = data.PlaceOfBirth.split(',');
+                    $("#Origin").val(origin[origin.length - 1].trim());
+                    $("#Picture").val("https://image.tmdb.org/t/p/w300" + data.ProfilePath);
+                    $("#prev").attr("src", "https://image.tmdb.org/t/p/w300" + data.ProfilePath);
+                });
+        });
+
+
+        $("#Picture").on("change paste keyup", function () {
+            $("#prev").attr("src", $("#Picture").val());
+        });
+
+        $("#DirectorCreate").click(function (event) {
+
+            var form = $('#CreateDirector');
+            var token = $('input[name="__RequestVerificationToken"]', form).val();
+
+            $.post("/Directors/CreateFromAPI",
+                {
+                    __RequestVerificationToken: token,
+                    Name: $("#Name").val(),
+                    DateOfBirth: $("#DateOfBirth").val(),
+                    Origin: $("#Origin").val(),
+                    Picture: $("#Picture").val(),
+                    Gender: $("#Gender").val()
+                },
+                function (data, status) {
+                    console.log(data);
+                    $("#directoradded-modal").modal();
+                    var opt = $("<option> </option>").attr("value", data.ID).html(data.Name);
+                    $("#DirectorID").append(opt);
+                    $("#DirectorID").val(data.ID);
+                });
+
+        });
+
     });
 </script>
 
 <h2>Create</h2>
+
+
+<div class="modal fade" id="directorconfirm-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="directorconfirmmodal-container">
+            <h2>This Movie is directed by:</h2>
+            <h2 id="DirectorName" name="DirectorName"></h2>
+            <h3>Unfortunatly the director is not in the database.</h3>
+            <h3>Would you like to add him now?</h3>
+            <input type="hidden" id="DirectorModalID" name="DirectorModalID" style="display:none;" />
+            <button id="yes" name="yes" class="btn btn-default" data-dismiss="modal">Yes</button>
+            <button id="no" name="no" class="btn btn-default" data-dismiss="modal">No</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="directoradd-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="directoraddmodal-container">
+            <h1>Create Director</h1><br>
+            <form id="CreateDirector" name="CreateDirector" method="post" action="/Directors/CreateFromAPI">
+                @Html.AntiForgeryToken()
+                <input type="text" id="fromURI" name="fromURI" style="display:none" />
+                <div class="form-group">
+                    <label class="control-label col-md-2">Name: </label>
+                    <div class="col-md-10">
+                        <input type="text" id="Name" name="Name" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Gender: </label>
+                    <div class="col-md-10">
+                        <select class="form-control" id="Gender" name="Gender">
+                            <option value="0">Male</option>
+                            <option value="1">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Date Of Birth: </label>
+                    <div class="col-md-10">
+                        <input type="date" id="DateOfBirth" name="DateOfBirth" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Origin: </label>
+                    <div class="col-md-10">
+                        <input type="text" id="Origin" name="Origin" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Picture: </label>
+                    <div class="col-md-10">
+                        <input type="text" id="Picture" name="Picture" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Preview</label>
+                    <div class="col-md-10">
+                        <img id="prev" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" id="DirectorCreate" name="DirectorCreate" value="Create" class="create directoraddmodal-submit btn btn-default" data-dismiss="modal" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="directoradded-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="directoraddedmodal-container">
+            <h1>Director Added Successfully</h1>
+            <button class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+<!-- /Login -->
+
+
+
+
+
+
+
+
 
 <div class="row">
     <div class="col-sm-6">
@@ -190,7 +315,7 @@
 
     <div id="searchResult">
         <div class="col-sm-6">
-            <h4>WebAPI Search results (click the director you want to get his info):</h4>
+            <h4>WebAPI Search results (click the movie you want to get his info):</h4>
             <hr />
             <div class="panel panel-default">
                 <ul class="list-group" id="contact-list"></ul>
