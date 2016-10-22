@@ -1,5 +1,6 @@
 ﻿body {
     padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+  /*  background-image:url("https://i.ytimg.com/vi/JquobII5VjA/maxresdefault.jpg")*/
 }
 
 .slide-image {
@@ -238,7 +239,6 @@ ol.people li img {
     -webkit-border-radius: 91%;
     -moz-border-radius: 50%;
     border: 2px solid #333;
-    background-image: url("C:\Users\Eylam Milner\Desktop\UnknownPersonImage.png");
 }
 
 ol.people li p {
@@ -306,5 +306,17 @@ h5, .h5 {
     font-weight: normal;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
+}
 
+/* Director details*/
+#directorBio{
+    -webkit-column-count: 2; /* Chrome, Safari, Opera */
+    -moz-column-count: 2; /* Firefox */
+    column-count: 2;
+}
+
+/* Movie Genre Links*/
+.movieGenreLinks{
+    padding-bottom:10px;
+    display: -webkit-inline-box;
 }

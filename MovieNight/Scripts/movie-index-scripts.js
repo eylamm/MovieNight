@@ -40,7 +40,7 @@ $(document).ready(function () {
                 movieCopy.find(".releaseYear").text(movieYear);
                 
                 // Clear the gneres of the copied movie
-                movieCopy.find(".movieGenres").children().remove();
+                movieCopy.find(".movieGenreLinks").children().remove();
 
                 // Split the genre array
                 var afterSplit = jsonMovies[key].Genre.split(',');
@@ -59,7 +59,7 @@ $(document).ready(function () {
                     buttonTag.append(linkTag);
 
                     // Append them to the movieGenres class
-                    movieCopy.find(".movieGenres").append(buttonTag);
+                    movieCopy.find(".movieGenreLinks").append(buttonTag);
                 }
 
                 // Set the new movie review count

@@ -106,6 +106,17 @@ namespace MovieNight.Controllers
             {
                 return HttpNotFound();
             }
+
+            // Get the current director's TMDB ID
+            int tmdbDirectorID = client.SearchPerson(director.Name).Results[0].Id;
+
+            // Get the current Director's biography
+            var tmdbDirectorBio = client.GetPerson(tmdbDirectorID).Biography;
+
+            // Initalize html helper with biography information
+            ViewBag.tmdbDirectorBio = tmdbDirectorBio;
+
+            // Return the director object to the directors details view
             return View(director);
         }
 

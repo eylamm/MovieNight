@@ -32,7 +32,7 @@
                     <p><b>Plot: </b>@Model.Plot</p>
                     <p>
                         <b>Director: </b>
-                        <img src="@Model.Director.Picture" alt="@Model.Director.Name" style="width:100px; height:100px;" class="profile lazyautosizes lazyloaded img-circle">
+                        <img src="@Model.Director.Picture" alt="@Model.Director.Name" style="width:100px; height:100px;" class="profile lazyautosizes lazyloaded img-circle" onerror="this.src='http://mdepinet.org/wp-content/uploads/person-placeholder.jpg'">
                         @Html.ActionLink(Model.Director.Name, "Details", "Directors", new { id = Model.DirectorID }, null)
 
                     </p>

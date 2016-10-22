@@ -7,13 +7,14 @@
 
 <div>
     <div class="row">
-        <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Picture" alt="@Model.Name" style="width:300px; height:300px;">
+        <img class="col-md-3 col-sm-3 col-lg-3" src="@Model.Picture" alt="@Model.Name" style="width:300px; height:300px;" onerror="this.src='http://mdepinet.org/wp-content/uploads/person-placeholder.jpg'">
         <div class="col-md-6 col-sm-6 col-lg-6">
             <header name="directorDetails">
                 <h1>@Model.Name</h1>
                 <p><b>Origin: </b>@Model.Origin</p>
                 <p><b>Gender: </b>@Model.Gender.ToString()</p>
                 <p><b>BirthDay: </b>@Model.DateOfBirth.ToShortDateString()</p>
+                <p><b>Biography: </b></p><p  id="directorBio">@ViewBag.tmdbDirectorBio</p>
             </header>
             <div class="tabbable-panel">
                 <div class="tabbable-line">
