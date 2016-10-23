@@ -1,4 +1,4 @@
-﻿ @model IEnumerable<MovieNight.Models.Movie> 
+﻿@model IEnumerable<MovieNight.Models.Movie>
 
 @{
     ViewBag.Title = "Movies";
@@ -10,12 +10,25 @@
 <script src="~/Scripts/movie-index-scripts.js"></script>
 <script>
     $(document).ready(function () {
-        $("#welcome-modal").modal();
-    });
+        @{
+            var temp = 0;
+            if (Session["played"] == null)
+            {
+                Session["played"] = true;
+                temp = 1;
+            }
+        }
 
-    function ended() {
-        $("#welcome-modal").modal();
-    };
+        if (@temp == 1) {
+            $("#welcome-modal").modal();
+            $('#opening').get(0).play();
+        }
+
+        $("#opening").on('ended', function () {
+            console.log('Video has ended!');
+            $("#welcome-modal").modal('toggle');
+        });
+    });
 </script>
 
 <div class="row">
@@ -32,38 +45,38 @@
                 <div class="list-group-item">
                     <button id="clearOrder" name="orderBy" value="" class="btn-group-sm form-control" type="submit">All Movies</button>
                 </div>
-                </div>
-                <br />
+            </div>
+            <br />
 
-                <p class="lead">Filter</p>
+            <p class="lead">Filter</p>
 
-                <div class="list-group">
-                    <div class="list-group-item">
-                        <select class="form-control dropDownFilter" name="movieGenre" id="movieGenre">
-                            <option>All</option>
-                            @foreach (var genre in ViewBag.movieGenre)
+            <div class="list-group">
+                <div class="list-group-item">
+                    <select class="form-control dropDownFilter" name="movieGenre" id="movieGenre">
+                        <option>All</option>
+                        @foreach (var genre in ViewBag.movieGenre)
+                        {
+                            if (ViewBag.selectedGenre == genre.Text)
                             {
-                                if (ViewBag.selectedGenre == genre.Text)
-                                {
-                                    <option selected>@genre.Text</option>
-                                }
-                                else
-                                {
-                                    <option>@genre.Text</option>
-                                }
+                                <option selected>@genre.Text</option>
                             }
-                        </select>
-                    </div>
-                    <div class="list-group-item">
-                        <input type="text" class="search-query form-control" placeholder="Director's Name" id="searchDirector" name="searchDirector" value="@ViewBag.searchDirector" />
-                    </div>
-                    <div class="list-group-item">
-                        <input type="text" class="search-query form-control" placeholder="Movie's Name" id="searchString" name="searchString" value="@ViewBag.searchString" />
-                    </div>
-                    <div class="list-group-item">
-                        <button id="orderBy" name="orderBy" value="@ViewBag.orderBy" class="btn-group-sm form-control filterBy">Apply Filter</button>
-                    </div>
+                            else
+                            {
+                                <option>@genre.Text</option>
+                            }
+                        }
+                    </select>
                 </div>
+                <div class="list-group-item">
+                    <input type="text" class="search-query form-control" placeholder="Director's Name" id="searchDirector" name="searchDirector" value="@ViewBag.searchDirector" />
+                </div>
+                <div class="list-group-item">
+                    <input type="text" class="search-query form-control" placeholder="Movie's Name" id="searchString" name="searchString" value="@ViewBag.searchString" />
+                </div>
+                <div class="list-group-item">
+                    <button id="orderBy" name="orderBy" value="@ViewBag.orderBy" class="btn-group-sm form-control filterBy">Apply Filter</button>
+                </div>
+            </div>
         </form>
         <form>
             <button class="btn-group-sm form-control">Clear Filter</button>
@@ -75,8 +88,8 @@
         <div class="modal-dialog">
             <div class="welcomemodal-container">
                 <h1>Welcome to Movie Night</h1><br>
-                <video autoplay controls>
-                    <source src="~/Sources/open.mp4" type="video/mp4" onended="ended" />
+                <video id="opening" name="opening" controls>
+                    <source src="~/Sources/open.mp4" type="video/mp4" />
                 </video>
             </div>
         </div>
@@ -85,7 +98,7 @@
     <div class="col-md-9">
 
         <div class="row" id="displayedMovies">
-          <!-- If there are movies to display in the MovieNight DB -->
+            <!-- If there are movies to display in the MovieNight DB -->
             @if (Model.Count() > 0)
             {
                 int numOfMoviesToDisply = 0;
@@ -160,7 +173,7 @@
                     No Movies found, Try removing some of the filters.
                 </div>
             }
-            
+
             <!-- If unfiltered - enable the show me more button-->
             @if (!IsFiltered)
             {
