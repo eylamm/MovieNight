@@ -8,6 +8,11 @@
 
 <!-- Using the specific javascript functions for the movie inex page-->
 <script src="~/Scripts/movie-index-scripts.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#welcome-modal").modal();
+    });
+</script>
 
 <div class="row">
     <div class="col-md-3">
@@ -59,6 +64,18 @@
         <form>
             <button class="btn-group-sm form-control">Clear Filter</button>
         </form>
+    </div>
+
+
+    <div class="modal fade" id="welcome-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="welcomemodal-container">
+                <h1>Welcome to Movie Night</h1><br>
+                <video autoplay controls>
+                    <source src="~/Sources/open.mp4" type="video/mp4" onended="ended" />
+                </video>
+            </div>
+        </div>
     </div>
 
     <div class="col-md-9">
