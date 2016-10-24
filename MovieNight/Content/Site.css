@@ -631,3 +631,7 @@ g{
   font-size: 1.8em;
   font-family: roboto;
 }
+
+.welcomemodal-container video {
+    width: inherit;
+}
