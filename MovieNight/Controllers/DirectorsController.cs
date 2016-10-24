@@ -75,7 +75,7 @@ namespace MovieNight.Controllers
             if (!String.IsNullOrEmpty(directorOrigin) && !directorOrigin.Equals("All"))
             {
                 // Select the directors from that origin
-                DirectorsQry = DirectorsQry.Where(director => director.Origin.Equals(directorOrigin));
+                DirectorsQry = DirectorsQry.Where(director => director.Origin.Equals(directorOrigin) || director.Origin.Equals(" " + directorOrigin));
             }
 
             // Return the directors found
