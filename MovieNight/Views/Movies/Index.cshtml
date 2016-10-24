@@ -20,12 +20,12 @@
         }
 
         if (@temp == 1) {
+            @{ temp = 0;}
             $("#welcome-modal").modal();
             $('#opening').get(0).play();
         }
 
         $("#opening").on('ended', function () {
-            console.log('Video has ended!');
             $("#welcome-modal").modal('toggle');
         });
     });
@@ -89,7 +89,7 @@
             <div class="welcomemodal-container">
                 <h1>Welcome to Movie Night</h1><br>
                 <video id="opening" name="opening" controls>
-                    <source src="~/Sources/open.mp4" type="video/mp4" />
+                    <source src="~/Sources/open2.mp4" type="video/mp4" />
                 </video>
             </div>
         </div>

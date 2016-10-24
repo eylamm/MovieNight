@@ -80,6 +80,15 @@ a:hover{
      color: #337ab7;
 }
 
+.btn-info {
+    background-color:blue;
+    color: #ccc;
+    margin-bottom: 4px;
+}
+.btn-info:hover a {
+     color: #337ab7;
+}
+
 .list-group-item {
     background-color: inherit;
     border: none;
@@ -621,4 +630,8 @@ g{
   text-align: center;
   font-size: 1.8em;
   font-family: roboto;
+}
+
+.welcomemodal-container video {
+    width: inherit;
 }
