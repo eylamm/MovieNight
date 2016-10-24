@@ -182,10 +182,19 @@
                                 {
                                     years[movies.ReleaseDate.Year - Model.DateOfBirth.Year]++;
                                 }
-                                string data2 = "{Year: " + Model.DateOfBirth.Year + " , Count: " + years[0] + "}";
-                                for (var i = 1; i < age; i++)
+                                string data2 = "";
+                                bool first = true;
+                                for (var i = 0; i < age; i++)
                                 {
-                                    data2 += ", {Year: " + (Model.DateOfBirth.Year + i) + ", Count: " + years[i] + "}";
+                                    if (years[i] > 0 && first)
+                                    {
+                                        data2 += "{Year: " + (Model.DateOfBirth.Year + i) + ", Count: " + years[i] + "}";
+                                        first = false;
+                                    }
+                                    else if (!first)
+                                    {
+                                        data2 += ", {Year: " + (Model.DateOfBirth.Year + i) + ", Count: " + years[i] + "}";
+                                    }
                                 }
                             }
 

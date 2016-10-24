@@ -128,12 +128,7 @@ namespace MovieNight.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,CriticName,Date,MovieID,Content")] Review review, string returnUrl)
-        {
-            if (Session["user"] == null || (Session["user"] as User).Role != Role.Admin)
-            {
-                return RedirectToAction("AccessDenied", "Users");
-            }
-            
+        { 
             if (ModelState.IsValid)
             {
                 db.Reviews.Add(review);

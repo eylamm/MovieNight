@@ -11,7 +11,7 @@
     $(document).ready(function () {
 
         $("#searchResult").hide();
-        $("#Name").on("change paste keyup keydown", function () {
+        $("#Name").on("change paste keyup", function () {
             $.post("/Directors/SearchApi",
             {
                 query: $("#Name").val()
